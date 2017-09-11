@@ -1040,3 +1040,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _movementMultiplier: 10
   _energy: 2
+  IsDebug: 0
