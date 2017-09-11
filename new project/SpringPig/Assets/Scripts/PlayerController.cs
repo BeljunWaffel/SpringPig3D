@@ -3,7 +3,7 @@
 public class PlayerController : MonoBehaviour {
 
     public float _movementMultiplier;
-    public float _energy;
+    public int _energy;
 
     private Rigidbody player;
     private float distToGround;
@@ -64,7 +64,7 @@ public class PlayerController : MonoBehaviour {
             {
                 // Apply velocity directly, since we want an immediate change.
                 // https://docs.unity3d.com/ScriptReference/Rigidbody-velocity.html
-                player.velocity = new Vector3(0f, CalculateJumpVelocity(), 0f);
+                player.velocity = new Vector3(0f, CalculateJumpVelocity(_energy, includeClearance: true), 0f);
             }
         }
     }
@@ -81,7 +81,7 @@ public class PlayerController : MonoBehaviour {
         player.AddForce(movement);
     }
 
-    private float CalculateJumpVelocity()
+    private float CalculateJumpVelocity(int jumpHeight, bool includeClearance)
     {
         /*
             Potentially useful link if we want to go with the catapult idea https://forum.unity3d.com/threads/how-to-calculate-force-needed-to-jump-towards-target-point.372288/
@@ -91,7 +91,8 @@ public class PlayerController : MonoBehaviour {
         */
         
         var gravity = -1 * Physics.gravity.magnitude;
-        float yVelocity = Mathf.Sqrt(-2 * gravity * (_energy + Constants.JUMP_CLEARANCE));
+        var height = includeClearance ? jumpHeight + Constants.JUMP_CLEARANCE : jumpHeight;
+        float yVelocity = Mathf.Sqrt(-2 * gravity * height);
         return yVelocity;
     }
     
