@@ -5,4 +5,5 @@
     public static int ENERGY_DOWNGRADE = 1;			// How much energy is lost every time you fall.
 
     public static float JUMP_CLEARANCE = .1f;
+    public static int MINI_JUMP_HEIGHT = 1;
 }

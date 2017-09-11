@@ -42,6 +42,7 @@ public class PlayerController : MonoBehaviour {
     private void PerformVerticalMovement()
     {
         var jump = Input.GetAxis("Jump");
+        var miniJump = Input.GetAxis("MiniJump");
         var isGrounded = IsGrounded();
 
         // If player was in the air before but isn't anymore, calculate how much energy was gained.
@@ -65,6 +66,10 @@ public class PlayerController : MonoBehaviour {
                 // Apply velocity directly, since we want an immediate change.
                 // https://docs.unity3d.com/ScriptReference/Rigidbody-velocity.html
                 player.velocity = new Vector3(0f, CalculateJumpVelocity(_energy, includeClearance: true), 0f);
+            }
+            else if (miniJump != 0)
+            {
+                player.velocity = new Vector3(0f, CalculateJumpVelocity(Constants.MINI_JUMP_HEIGHT, includeClearance: true), 0f);
             }
         }
     }
