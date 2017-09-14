@@ -187,13 +187,13 @@ public class PlayerController : MonoBehaviour {
             var moveVertical = Input.GetAxis("Vertical");
 
             // Set box push speed to 1
-            if (isCollisionX && moveHorizontal != 0)
+            if (isCollisionX && moveHorizontal != 0 && IsSameSign(moveHorizontal, collisionDirection.x))
             {
                 box.constraints = Constants.DEFAULT_BOX_CONSTRAINTS | RigidbodyConstraints.FreezePositionZ;
                 box.velocity = new Vector3(player.velocity.x < 0 ? Constants.BOX_SPEED * -1: Constants.BOX_SPEED, 0f, 0f);
                 boxSpeedX = true;
             }
-            else if (!isCollisionX && moveVertical != 0)
+            else if (!isCollisionX && moveVertical != 0 && IsSameSign(moveVertical, collisionDirection.z))
             {
                 box.constraints = Constants.DEFAULT_BOX_CONSTRAINTS | RigidbodyConstraints.FreezePositionX;
                 box.velocity = new Vector3(0f, 0f, player.velocity.z < 0 ? Constants.BOX_SPEED * -1 : Constants.BOX_SPEED);
@@ -212,5 +212,10 @@ public class PlayerController : MonoBehaviour {
             boxSpeedX = false;
             boxSpeedZ = false;
         }
+    }
+
+    private bool IsSameSign(float x, float y)
+    {
+        return (x < 0 && y < 0) || (x >= 0 && y >= 0);
     }
 }
