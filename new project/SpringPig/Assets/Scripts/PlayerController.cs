@@ -11,8 +11,8 @@ public class PlayerController : MonoBehaviour {
     private bool isMovingHorizontally = false;
 
     // Box interactions
-    private bool boxSpeedX = false;
-    private bool boxSpeedZ = false;
+    private bool pushingBoxX = false;
+    private bool pushingBoxZ = false;
 
     // Needed to calculate energy
     private float maxHeight = -1;
@@ -35,8 +35,8 @@ public class PlayerController : MonoBehaviour {
     // Applied before physics
     void FixedUpdate()
     {
-        PerformVerticalMovement();
         PerformHorizontalMovement();
+        PerformVerticalMovement();
     }
 
     void OnGUI()
@@ -83,25 +83,33 @@ public class PlayerController : MonoBehaviour {
     {
         var moveHorizontal = Input.GetAxis("Horizontal");
         var moveVertical = Input.GetAxis("Vertical");
-        // Horizontal movement
-        Vector3 movement;
-        movement = new Vector3(moveHorizontal * _movementMultiplier,
-                               player.velocity.y,
-                               moveVertical * _movementMultiplier);
 
-        if (boxSpeedX && movement.x != 0)
+        if (moveHorizontal == 0 && moveVertical == 0)
         {
-            movement.x = movement.x < 0 ? Constants.BOX_SPEED * -1 : Constants.BOX_SPEED;
+            player.velocity = new Vector3(0f, player.velocity.y, 0f);
+            isMovingHorizontally = false;
         }
-
-        if (boxSpeedZ && movement.z != 0)
+        else
         {
-            movement.z = movement.z < 0 ? Constants.BOX_SPEED * -1 : Constants.BOX_SPEED;
+            // Horizontal movement
+            Vector3 movement;
+            movement = new Vector3(moveHorizontal * _movementMultiplier,
+                                   player.velocity.y,
+                                   moveVertical * _movementMultiplier);
+
+            if (pushingBoxX && movement.x != 0)
+            {
+                movement.x = GetBoxSpeed(movement.x);
+            }
+
+            if (pushingBoxZ && movement.z != 0)
+            {
+                movement.z = GetBoxSpeed(movement.z);
+            }
+
+            player.velocity = movement;
+            isMovingHorizontally = true;
         }
-
-        player.velocity = movement;
-
-        isMovingHorizontally = movement.normalized != Vector3.zero ? true : false;
     }
 
     private float CalculateJumpVelocity(int jumpHeight, bool includeClearance)
@@ -138,21 +146,6 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    // Prints out the max height
-    private void PrintMaxJumpHeight()
-    {
-        // Calculate max height
-        if (!IsGrounded() && player.position.y > maxHeight)
-        {
-            maxHeight = player.position.y;
-        }
-
-        if (IsGrounded() && maxHeight != -1)
-        {
-            Debug.Log(maxHeight);
-        }
-    }
-    
     void OnCollisionStay(Collision collision)
     {
         var gameObject = collision.gameObject;
@@ -167,16 +160,15 @@ public class PlayerController : MonoBehaviour {
         var gameObject = collision.gameObject;
         if (gameObject.CompareTag("Box"))
         {
-            boxSpeedX = false;
-            boxSpeedZ = false;
+            ResetPushingBoxSpeed(gameObject.GetComponent<Rigidbody>());
         }
     }
 
     private void PushBox(GameObject boxObject, Collision collision)
     {
+        var box = boxObject.GetComponent<Rigidbody>();
         if (isMovingHorizontally)
         {
-            var box = boxObject.GetComponent<Rigidbody>();
             var positionDiff = player.transform.position - box.transform.position;
             var collisionDirection = new Vector3(positionDiff.x * -1, 0, positionDiff.z * -1).normalized;
 
@@ -187,35 +179,58 @@ public class PlayerController : MonoBehaviour {
             var moveVertical = Input.GetAxis("Vertical");
 
             // Set box push speed to 1
-            if (isCollisionX && moveHorizontal != 0 && IsSameSign(moveHorizontal, collisionDirection.x))
+            if (isCollisionX && moveHorizontal != 0 && MathUtils.IsSameSign(moveHorizontal, collisionDirection.x))
             {
-                box.constraints = Constants.DEFAULT_BOX_CONSTRAINTS | RigidbodyConstraints.FreezePositionZ;
-                box.velocity = new Vector3(player.velocity.x < 0 ? Constants.BOX_SPEED * -1: Constants.BOX_SPEED, 0f, 0f);
-                boxSpeedX = true;
+                box.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionZ;
+                box.velocity = new Vector3(GetBoxSpeed(player.velocity.x), 0f, 0f);
+                pushingBoxX = true;
             }
-            else if (!isCollisionX && moveVertical != 0 && IsSameSign(moveVertical, collisionDirection.z))
+            else if (!isCollisionX && moveVertical != 0 && MathUtils.IsSameSign(moveVertical, collisionDirection.z))
             {
-                box.constraints = Constants.DEFAULT_BOX_CONSTRAINTS | RigidbodyConstraints.FreezePositionX;
-                box.velocity = new Vector3(0f, 0f, player.velocity.z < 0 ? Constants.BOX_SPEED * -1 : Constants.BOX_SPEED);
-                boxSpeedZ = true;
+                box.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionX;
+                box.velocity = new Vector3(0f, 0f, GetBoxSpeed(player.velocity.z));
+                pushingBoxZ = true;
             }
             else
             {
-                boxSpeedX = false;
-                boxSpeedZ = false;
+                ResetPushingBoxSpeed(box);
             }
-
-            Debug.Log("BoxVelocity:" + box.velocity + "\nPlayerVelocity: " + player.velocity);
         }
         else
         {
-            boxSpeedX = false;
-            boxSpeedZ = false;
+            ResetPushingBoxSpeed(box);
         }
     }
 
-    private bool IsSameSign(float x, float y)
+    private void ResetPushingBoxSpeed(Rigidbody box)
     {
-        return (x < 0 && y < 0) || (x >= 0 && y >= 0);
+        box.constraints = RigidbodyConstraints.FreezeAll;
+        pushingBoxX = false;
+        pushingBoxZ = false;
     }
+
+    private float GetBoxSpeed(float playerVelocity)
+    {
+        // If player velocity is < Box speed, return player velocity.
+        // Otherwise return boxspeed in the direction the player was moving.
+        return (Mathf.Abs(playerVelocity) < Constants.BOX_SPEED) ?
+               playerVelocity : 
+               MathUtils.IsPositive(playerVelocity) * Constants.BOX_SPEED;
+    }
+
+    // Prints out the max height
+    private void PrintMaxJumpHeight()
+    {
+        // Calculate max height
+        if (!IsGrounded() && player.position.y > maxHeight)
+        {
+            maxHeight = player.position.y;
+        }
+
+        if (IsGrounded() && maxHeight != -1)
+        {
+            Debug.Log(maxHeight);
+        }
+    }
+
 }

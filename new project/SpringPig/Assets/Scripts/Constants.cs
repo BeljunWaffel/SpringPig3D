@@ -8,7 +8,6 @@ public class Constants
 
     public static float JUMP_CLEARANCE = .1f;
     public static int MINI_JUMP_HEIGHT = 1;
-
-    public static RigidbodyConstraints DEFAULT_BOX_CONSTRAINTS = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
+    
     public static float BOX_SPEED = 1f;
 }
