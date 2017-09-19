@@ -1,4 +1,6 @@
-﻿public class Constants
+﻿using UnityEngine;
+
+public class Constants
 {
     public static int MAX_ENERGY = 10;              // How much energy the player is allowed to store.
     public static int MIN_ENERGY = 1;              // How much energy the player is allowed to store.
@@ -6,4 +8,6 @@
 
     public static float JUMP_CLEARANCE = .1f;
     public static int MINI_JUMP_HEIGHT = 1;
+    
+    public static float BOX_SPEED = 1f;
 }

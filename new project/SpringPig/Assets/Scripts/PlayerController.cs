@@ -8,6 +8,11 @@ public class PlayerController : MonoBehaviour {
     private Rigidbody player;
     private float distToGround;
     private bool wasGrounded = false;
+    private bool isMovingHorizontally = false;
+
+    // Box interactions
+    private bool pushingBoxX = false;
+    private bool pushingBoxZ = false;
 
     // Needed to calculate energy
     private float maxHeight = -1;
@@ -30,8 +35,8 @@ public class PlayerController : MonoBehaviour {
     // Applied before physics
     void FixedUpdate()
     {
-        PerformVerticalMovement();
         PerformHorizontalMovement();
+        PerformVerticalMovement();
     }
 
     void OnGUI()
@@ -44,7 +49,7 @@ public class PlayerController : MonoBehaviour {
         var jump = Input.GetAxis("Jump");
         var miniJump = Input.GetAxis("MiniJump");
         var isGrounded = IsGrounded();
-
+        
         // If player was in the air before but isn't anymore, calculate how much energy was gained.
         if (!wasGrounded && isGrounded)
         {
@@ -65,25 +70,46 @@ public class PlayerController : MonoBehaviour {
             {
                 // Apply velocity directly, since we want an immediate change.
                 // https://docs.unity3d.com/ScriptReference/Rigidbody-velocity.html
-                player.velocity = new Vector3(0f, CalculateJumpVelocity(_energy, includeClearance: true), 0f);
+                player.velocity = new Vector3(player.velocity.x, CalculateJumpVelocity(_energy, includeClearance: true), player.velocity.z);
             }
             else if (miniJump != 0)
             {
-                player.velocity = new Vector3(0f, CalculateJumpVelocity(Constants.MINI_JUMP_HEIGHT, includeClearance: true), 0f);
+                player.velocity = new Vector3(player.velocity.x, CalculateJumpVelocity(Constants.MINI_JUMP_HEIGHT, includeClearance: true), player.velocity.z);
             }
         }
     }
 
     private void PerformHorizontalMovement()
     {
-        var moveHorizortal = Input.GetAxis("Horizontal");
+        var moveHorizontal = Input.GetAxis("Horizontal");
         var moveVertical = Input.GetAxis("Vertical");
-        // Horizontal movement
-        Vector3 movement;
-        movement = new Vector3(moveHorizortal * _movementMultiplier,
-                               0,
-                               moveVertical * _movementMultiplier);
-        player.AddForce(movement);
+
+        if (moveHorizontal == 0 && moveVertical == 0)
+        {
+            player.velocity = new Vector3(0f, player.velocity.y, 0f);
+            isMovingHorizontally = false;
+        }
+        else
+        {
+            // Horizontal movement
+            Vector3 movement;
+            movement = new Vector3(moveHorizontal * _movementMultiplier,
+                                   player.velocity.y,
+                                   moveVertical * _movementMultiplier);
+
+            if (pushingBoxX && movement.x != 0)
+            {
+                movement.x = GetBoxSpeed(movement.x);
+            }
+
+            if (pushingBoxZ && movement.z != 0)
+            {
+                movement.z = GetBoxSpeed(movement.z);
+            }
+
+            player.velocity = movement;
+            isMovingHorizontally = true;
+        }
     }
 
     private float CalculateJumpVelocity(int jumpHeight, bool includeClearance)
@@ -120,6 +146,78 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
+    void OnCollisionStay(Collision collision)
+    {
+        var gameObject = collision.gameObject;
+        if (gameObject.CompareTag("Box"))
+        {
+            PushBox(gameObject, collision);
+        }
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        var gameObject = collision.gameObject;
+        if (gameObject.CompareTag("Box"))
+        {
+            ResetPushingBoxSpeed(gameObject.GetComponent<Rigidbody>());
+        }
+    }
+
+    private void PushBox(GameObject boxObject, Collision collision)
+    {
+        var box = boxObject.GetComponent<Rigidbody>();
+        if (isMovingHorizontally)
+        {
+            var positionDiff = player.transform.position - box.transform.position;
+            var collisionDirection = new Vector3(positionDiff.x * -1, 0, positionDiff.z * -1).normalized;
+
+            var isCollisionX = Mathf.Abs(collisionDirection.x) > Mathf.Abs(collisionDirection.z);
+
+            // Verify player input
+            var moveHorizontal = Input.GetAxis("Horizontal");
+            var moveVertical = Input.GetAxis("Vertical");
+
+            // Set box push speed to 1
+            if (isCollisionX && moveHorizontal != 0 && MathUtils.IsSameSign(moveHorizontal, collisionDirection.x))
+            {
+                box.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionZ;
+                box.velocity = new Vector3(GetBoxSpeed(player.velocity.x), 0f, 0f);
+                pushingBoxX = true;
+            }
+            else if (!isCollisionX && moveVertical != 0 && MathUtils.IsSameSign(moveVertical, collisionDirection.z))
+            {
+                box.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionX;
+                box.velocity = new Vector3(0f, 0f, GetBoxSpeed(player.velocity.z));
+                pushingBoxZ = true;
+            }
+            else
+            {
+                ResetPushingBoxSpeed(box);
+            }
+        }
+        else
+        {
+            ResetPushingBoxSpeed(box);
+        }
+    }
+
+    private void ResetPushingBoxSpeed(Rigidbody box)
+    {
+        box.constraints = RigidbodyConstraints.FreezeAll;
+        pushingBoxX = false;
+        pushingBoxZ = false;
+    }
+
+    private float GetBoxSpeed(float playerVelocity)
+    {
+        // If player velocity is < Box speed, return player velocity.
+        // Otherwise return boxspeed in the direction the player was moving.
+        return (Mathf.Abs(playerVelocity) < Constants.BOX_SPEED) ?
+               playerVelocity : 
+               MathUtils.IsPositive(playerVelocity) * Constants.BOX_SPEED;
+    }
+
     // Prints out the max height
     private void PrintMaxJumpHeight()
     {
@@ -135,12 +233,4 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    //void OnTriggerEnter(Collider other)
-    //{
-    //    if (other.gameObject.CompareTag("Pick Up"))
-    //    {
-    //        other.gameObject.SetActive(false);
-    //        Destroy(other.gameObject);
-    //    }
-    //}
 }
