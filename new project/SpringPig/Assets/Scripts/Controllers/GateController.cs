@@ -4,22 +4,20 @@ using UnityEngine;
 
 public class GateController : MonoBehaviour {
 
-    public GameObject button;
+    public GameObject _button;
 
     private Rigidbody gate;
+    private ButtonController buttonController;
 
     // Use this for initialization
     void Start () {
 		gate = GetComponent<Rigidbody>();
+
+        buttonController = _button.GetComponent<ButtonController>();
     }
 	
 	// Update is called once per frame
 	void Update () {
-        ButtonController buttonController = button.GetComponent<ButtonController>();
-
-        if (buttonController.activated)
-        {
-            gate.gameObject.SetActive(false);
-        }
+        gate.gameObject.SetActive(!buttonController.isPushed());
 	}
 }

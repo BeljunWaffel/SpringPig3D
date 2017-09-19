@@ -149,7 +149,8 @@ public class PlayerController : MonoBehaviour {
     void OnCollisionStay(Collision collision)
     {
         var gameObject = collision.gameObject;
-        if (gameObject.CompareTag("Box"))
+        TagList collisionTags = gameObject.GetComponent<TagList>();
+        if (collisionTags != null && collisionTags.ContainsTag(Constants.BOX))
         {
             PushBox(gameObject, collision);
         }
@@ -158,7 +159,8 @@ public class PlayerController : MonoBehaviour {
     void OnCollisionExit(Collision collision)
     {
         var gameObject = collision.gameObject;
-        if (gameObject.CompareTag("Box"))
+        TagList collisionTags = gameObject.GetComponent<TagList>();
+        if (collisionTags != null && collisionTags.ContainsTag(Constants.BOX))
         {
             ResetPushingBoxSpeed(gameObject.GetComponent<Rigidbody>());
         }

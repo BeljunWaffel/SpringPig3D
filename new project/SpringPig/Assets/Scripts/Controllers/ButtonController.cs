@@ -4,28 +4,28 @@ using UnityEngine;
 
 public class ButtonController : MonoBehaviour {
 
-    public bool activated = false;
-    private Rigidbody button;
+    protected bool pushed = false;
+    protected Rigidbody button;
 
 	// Use this for initialization
 	void Start () {
-
         button = GetComponent<Rigidbody>();
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Player"))
-        {
+    private void OnTriggerEnter(Collider other) {
+
+        TagList otherTags = other.gameObject.GetComponent<TagList>();
+
+        if (otherTags != null && otherTags.ContainsTag(Constants.BUTTON_PUSHER)) {
             // TODO: Some better way to show a pushed button
             button.gameObject.SetActive(false);
 
-            activated = true;
+            pushed = true;
         }
+    }
+
+    public bool isPushed()
+    {
+        return pushed;
     }
 }
