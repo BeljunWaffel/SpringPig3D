@@ -8,6 +8,7 @@ public class GateController : MonoBehaviour {
 
     private Rigidbody gate;
     private ButtonController buttonController;
+    private bool isOpen = false;
 
     // Use this for initialization
     void Start () {
@@ -18,6 +19,34 @@ public class GateController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        gate.gameObject.SetActive(!buttonController.isPushed());
-	}
+        if (buttonController.IsPushed() && !isOpen)
+        {
+            isOpen = true;
+
+            // Set Graphics
+            Color c = GetComponent<Renderer>().material.color;
+            c.a = 0.5f;
+            GetComponent<Renderer>().material.color = c;
+
+            // Set Collisions
+            GetComponent<BoxCollider>().enabled = false;
+        }
+        else if (!buttonController.IsPushed() && isOpen)
+        {
+            isOpen = false;
+
+            // Set Graphics
+            Color c = GetComponent<Renderer>().material.color;
+            c.a = 1;
+            GetComponent<Renderer>().material.color = c;
+
+            // Set Collisions
+            GetComponent<BoxCollider>().enabled = true;
+        }
+    }
+
+    public bool IsOpen()
+    {
+        return isOpen;
+    }
 }

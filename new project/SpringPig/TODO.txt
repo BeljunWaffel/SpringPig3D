@@ -1,0 +1,43 @@
+ .----------------.  .----------------.  .----------------.  .----------------. 
+| .--------------. || .--------------. || .--------------. || .--------------. |
+| |  _________   | || |     ____     | || |  ________    | || |     ____     | |
+| | |  _   _  |  | || |   .'    `.   | || | |_   ___ `.  | || |   .'    `.   | |
+| | |_/ | | \_|  | || |  /  .--.  \  | || |   | |   `. \ | || |  /  .--.  \  | |
+| |     | |      | || |  | |    | |  | || |   | |    | | | || |  | |    | |  | |
+| |    _| |_     | || |  \  `--'  /  | || |  _| |___.' / | || |  \  `--'  /  | |
+| |   |_____|    | || |   `.____.'   | || | |________.'  | || |   `.____.'   | |
+| |              | || |              | || |              | || |              | |
+| '--------------' || '--------------' || '--------------' || '--------------' |
+ '----------------'  '----------------'  '----------------'  '----------------' 
+ 
+This is a list of bugs that need to be fixed and other things that need to be done:
+ 
+--------------------------------------------------------------------------------------------------------------------------
+ 
+Collisions when jumping into a block.
+	Repro:
+		1. Create a block that is higher than the player can normally jump (note this also occurs when colliding with smaller blocks while in the air)
+		2. Move towards a block
+		3. Jump
+		4. Continue to push key in the direction of the block as you collide with it
+	
+	Expected:
+		Player collides with the block and falls down
+		
+	Observed:
+		Player sticks on the block where they collide, as long as the key is pressed down.
+		
+--------------------------------------------------------------------------------------------------------------------------
+
+Toggleable buttons becoming unpressed when moving the a crate off them
+	Repro:
+		1. Create a toggleable button
+		2. Create a crate
+		3. Push the crate onto the button
+		4. Continue pushing the crate such that the button is now underneith the player
+		
+	Expected:
+		Button remains pushed when it transitions from being under the crate to under the player
+	
+	Observed:
+		When the button transitions from being under the crate to under the player, it becomes unpushed.
