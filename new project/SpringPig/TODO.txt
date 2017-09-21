@@ -27,17 +27,3 @@ Collisions when jumping into a block.
 	Observed:
 		Player sticks on the block where they collide, as long as the key is pressed down.
 		
---------------------------------------------------------------------------------------------------------------------------
-
-Toggleable buttons becoming unpressed when moving the a crate off them
-	Repro:
-		1. Create a toggleable button
-		2. Create a crate
-		3. Push the crate onto the button
-		4. Continue pushing the crate such that the button is now underneith the player
-		
-	Expected:
-		Button remains pushed when it transitions from being under the crate to under the player
-	
-	Observed:
-		When the button transitions from being under the crate to under the player, it becomes unpushed.

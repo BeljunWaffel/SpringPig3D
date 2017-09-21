@@ -6,20 +6,17 @@ public class GateController : MonoBehaviour {
 
     public GameObject _button;
 
-    private Rigidbody gate;
     private ButtonController buttonController;
     private bool isOpen = false;
 
     // Use this for initialization
     void Start () {
-		gate = GetComponent<Rigidbody>();
-
         buttonController = _button.GetComponent<ButtonController>();
     }
 	
 	// Update is called once per frame
 	void Update () {
-        if (buttonController.IsPushed() && !isOpen)
+        if (buttonController.IsPressed() && !isOpen)
         {
             isOpen = true;
 
@@ -31,7 +28,7 @@ public class GateController : MonoBehaviour {
             // Set Collisions
             GetComponent<BoxCollider>().enabled = false;
         }
-        else if (!buttonController.IsPushed() && isOpen)
+        else if (!buttonController.IsPressed() && isOpen)
         {
             isOpen = false;
 

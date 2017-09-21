@@ -4,26 +4,26 @@ using UnityEngine;
 
 public class ButtonController : MonoBehaviour {
 
-    public bool toggleable;
+    public bool _toggleable;
 
-    protected bool pushed = false;
-    protected Rigidbody button;
+    private bool isPressed = false;
+    private Rigidbody button;
+    private int numberofPressingObjects;
 
-	// Use this for initialization
 	void Start ()
     {
         button = GetComponent<Rigidbody>();
+        numberofPressingObjects = 0;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-
         TagList otherTags = other.gameObject.GetComponent<TagList>();
 
-        if (!pushed &&
-            otherTags != null && 
+        if (otherTags != null && 
             otherTags.ContainsTag(Constants.BUTTON_PUSHER))
         {
+            numberofPressingObjects++;
             PushButton();
         }
     }
@@ -32,31 +32,36 @@ public class ButtonController : MonoBehaviour {
     {
         TagList otherTags = other.gameObject.GetComponent<TagList>();
 
-        if (toggleable && 
-            pushed && 
-            otherTags != null && 
+        if (otherTags != null && 
             otherTags.ContainsTag(Constants.BUTTON_PUSHER))
         {
+            numberofPressingObjects--;
             UnpushButton();
         }
     }
 
-    public bool IsPushed()
+    public bool IsPressed()
     {
-        return pushed;
+        return isPressed;
     }
 
     private void PushButton()
     {
-        // TODO: Some better way to show a pushed button
-        button.gameObject.transform.localScale -= new Vector3(0, 0.125F, 0);
-        //button.gameObject.SetActive(false);
-        pushed = true;
+        if (!isPressed)
+        {
+            button.gameObject.transform.localScale -= new Vector3(0, 0.125F, 0);
+            isPressed = true;
+        }
     }
 
     private void UnpushButton()
     {
-        button.gameObject.transform.localScale += new Vector3(0, 0.125F, 0);
-        pushed = false;
+        if (_toggleable && 
+            isPressed && 
+            numberofPressingObjects == 0)
+        {
+            button.gameObject.transform.localScale += new Vector3(0, 0.125F, 0);
+            isPressed = false;
+        }
     }
 }

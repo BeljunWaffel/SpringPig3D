@@ -917,6 +917,11 @@ Prefab:
       propertyPath: m_Name
       value: Button (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 114959353305811690, guid: 65b16d05b2f492643819f97a4a01336a,
+        type: 2}
+      propertyPath: _toggleable
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 65b16d05b2f492643819f97a4a01336a, type: 2}
   m_IsPrefabParent: 0
