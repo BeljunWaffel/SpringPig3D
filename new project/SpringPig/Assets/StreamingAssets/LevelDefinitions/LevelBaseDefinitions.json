@@ -1,0 +1,24 @@
+{
+	"Key": 1,
+	"Value": "Cube of Height 1"
+},
+{
+	"Key": "1.<X>",
+	"Value": "Cube of Height X"
+},
+{
+	"Key": 2,
+	"Value": "Gate"
+},
+{
+	"Key": 3,
+	"Value": "No Toggle Button"
+},
+{
+	"Key": 4,
+	"Value": "Toggle Button"
+},
+{
+	"Key": 5,
+	"Value": "Box"
+},

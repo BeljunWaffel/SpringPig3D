@@ -20,7 +20,6 @@ public static class LevelParser
                 throw e;
             }
 
-            levelDefinition = null;
             return true;
         }
         else
