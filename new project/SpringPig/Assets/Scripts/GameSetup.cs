@@ -7,6 +7,12 @@ public class GameSetup : MonoBehaviour
     public string _levelName;
 
     private Dictionary<string, int> itemCounts;
+    private Dictionary<string, List<Heights>> verticalDefinitions;
+
+    // Containers
+    private GameObject wallsContainer;
+    private GameObject interactableObjectsContainer;
+    private GameObject nonInteractableObjectsContainer;
 
     // Use this for initialization
     void Start () {
@@ -31,55 +37,9 @@ public class GameSetup : MonoBehaviour
             var width = levelDefinition.Width;
 
             ScalePlane(length, width);
-            CreateWalls(length, width);
-
-            // Ensure # of items in levelBase is equal to specified length/width
-            if (length * width != levelDefinition.LevelBase.Count)
-            {
-                throw new ArgumentNullException("Invalid JSON. LevelBase size does not match length/width arguments.");
-            }
-
-            // Set up containers
-            //var interactableObjectsContainer = new GameObject("InteractableObjects");
-            var nonInteractableObjectsContainer = new GameObject("NonInteractableObjects");
-
-            for (int i = 0; i < levelDefinition.LevelBase.Count; i++) {
-                var item = levelDefinition.LevelBase[i];
-                var row = i / width;
-                var col = i % length;
-
-                // Refer to LevelBaseDefinitions.json, which contains definitions for each itemType.
-                if (item is Int64)
-                {
-                    var itemType = Convert.ToInt32(item);
-                    switch (itemType)
-                    {
-                        case 0:
-                            // Do Nothing
-                            break;
-                        case 1:
-                            // Cube of Height 1
-                            CreateCube(1f, col, row, CreateUniqueItemName("Cube_1"), nonInteractableObjectsContainer);
-                            break;
-                        default:
-                            // Do Nothing
-                            break;
-                    }
-                }
-                else if (item is string)
-                {
-                    var itemType = Convert.ToString(item);
-                    if (itemType.StartsWith("1."))
-                    {
-                        var height = Convert.ToInt32(itemType.Substring(2));
-                        CreateCube(height, col, row, CreateUniqueItemName("Cube_" + height), nonInteractableObjectsContainer);
-                    }
-                    else
-                    {
-
-                    }
-                }
-            }
+            CreateOuterWalls(length, width);
+            ParseVerticalDefinitions(levelDefinition);
+            SetupLevelContents(length, width, levelDefinition);
         }
 	}
 
@@ -100,13 +60,13 @@ public class GameSetup : MonoBehaviour
         }
     }
 
-    private void CreateWalls(int length, int width)
+    private void CreateOuterWalls(int length, int width)
     {
-        var wallContainer = new GameObject("Walls");
-        var westWall = CreateWall(width, "West Wall", wallContainer);
-        var eastWall = CreateWall(width, "East Wall", wallContainer);
-        var northWall = CreateWall(length, "North Wall", wallContainer);
-        var southWall = CreateWall(length, "South Wall", wallContainer);
+        wallsContainer = new GameObject("Walls");
+        var westWall = CreateWall(width, "West Wall", wallsContainer);
+        var eastWall = CreateWall(width, "East Wall", wallsContainer);
+        var northWall = CreateWall(length, "North Wall", wallsContainer);
+        var southWall = CreateWall(length, "South Wall", wallsContainer);
 
         var widthOffset = Constants.DEFAULT_WALL_WIDTH / 2;
 
@@ -135,16 +95,96 @@ public class GameSetup : MonoBehaviour
         return wall;
     }
 
-    private GameObject CreateCube(float height, int column, int row, string name, GameObject parent)
+    private void SetupLevelContents(int length, int width, LevelDefinition levelDefinition)
+    {
+        // Ensure # of items in levelBase is equal to specified length/width
+        if (length * width != levelDefinition.LevelBase.Count)
+        {
+            throw new ArgumentNullException("Invalid JSON. LevelBase size does not match length/width arguments.");
+        }
+
+        // Set up containers
+        interactableObjectsContainer = new GameObject("InteractableObjects");
+        nonInteractableObjectsContainer = new GameObject("NonInteractableObjects");
+
+        for (int i = 0; i < levelDefinition.LevelBase.Count; i++)
+        {
+            var item = levelDefinition.LevelBase[i];
+            var row = i / width;
+            var col = i % length;
+
+            // Refer to LevelBaseDefinitions.json, which contains definitions for each itemType.
+            if (item is Int64)
+            {
+                var id = Convert.ToInt32(item);
+                ParseIntsAndCreateGameObjects(id, col, row);
+            }
+            else if (item is string)
+            {
+                var itemType = Convert.ToString(item);
+                if (itemType.StartsWith("1."))
+                {
+                    var height = Convert.ToInt32(itemType.Substring(2));
+                    CreateCube(height, col, row, 0, CreateUniqueItemName("Cube_" + height));
+                }
+                else
+                {
+                    List<Heights> heights;
+                    if (!verticalDefinitions.TryGetValue(itemType, out heights))
+                    {
+                        Debug.Log("Could not find height definition for " + itemType);
+                    }
+                    else
+                    {
+                        foreach (var height in heights)
+                        {
+                            var id = Convert.ToInt32(height.Id);
+                            ParseIntsAndCreateGameObjects(id, col, row, height.StartHeight, height.EndHeight);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void ParseIntsAndCreateGameObjects(int id, int col, int row, int startHeight = 0, int endHeight = 0)
+    {
+        switch (id)
+        {
+            case 0:
+                // Do Nothing
+                break;
+            case 1:
+                // Cube of Height 1
+                int height = endHeight - startHeight;
+                CreateCube(height, col, row, startHeight, CreateUniqueItemName("Cube_1"));
+                break;
+            default:
+                // Do Nothing
+                break;
+        }
+    }
+
+    private void ParseVerticalDefinitions(LevelDefinition levelDefinition)
+    {
+        verticalDefinitions = new Dictionary<string, List<Heights>>();
+        foreach (var verticalDefinition in levelDefinition.VerticalDefinitions)
+        {
+            var id = verticalDefinition.Id;
+            verticalDefinitions.Add(id, verticalDefinition.Heights);
+        }
+    }
+
+    private GameObject CreateCube(float height, int column, int row, int startHeight, string name)
     {
         var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
         cube.AddComponent<BoxCollider>();
 
         // +1 to give a buffer on both sides, so the walls superpose at the edges
         cube.transform.localScale = new Vector3(1f, height, 1f);
-        cube.transform.position = new Vector3(0.5f + column, height / 2.0f, -.5f - row);
+        cube.transform.position = new Vector3(0.5f + column, height / 2.0f + startHeight, -.5f - row);
 
-        cube.transform.parent = parent.transform;
+        cube.transform.parent = nonInteractableObjectsContainer.transform;
         cube.name = name;
 
         return cube;

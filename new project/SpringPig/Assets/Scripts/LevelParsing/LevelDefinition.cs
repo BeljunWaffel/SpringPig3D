@@ -9,7 +9,7 @@ public class Heights
 }
 
 [System.Serializable]
-public class LevelVertical
+public class VerticalDefinitions
 {
     public string Id;
     public List<Heights> Heights;
@@ -22,5 +22,5 @@ public class LevelDefinition
     public int Length;
     public int Width;
     public List<object> LevelBase;
-    public List<LevelVertical> LevelVertical;
+    public List<VerticalDefinitions> VerticalDefinitions;
 }

@@ -19,17 +19,18 @@
 		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
 		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0
 	],
-	"LevelVertical": [{
+	"VerticalDefinitions": [
+		{
 			"Id": "a",
 			"Heights": [
 				{
 					"Id": 1,
-					"StartHeight": 2,
+					"StartHeight": 1,
 					"EndHeight": 2
 				},
 				{
 					"Id": 1,
-					"StartHeight": 4,
+					"StartHeight": 3,
 					"EndHeight": 4
 				}
 			]			
