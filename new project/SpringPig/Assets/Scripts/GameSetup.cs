@@ -253,7 +253,7 @@ public class GameSetup : MonoBehaviour
         var button = Instantiate(_buttonPrefab, interactableObjectsContainer.transform);
 
         button.localScale = new Vector3(.5f, .25f, .5f);
-        button.position = new Vector3(0.25f + col, .25f / 2.0f + startHeight, -.25f - row);
+        button.position = new Vector3(0.5f + col, .25f / 2.0f + startHeight, -.5f - row);
         button.name = CreateUniqueItemName("Button_" + buttonNumber);
         
         // If gates already exist for this button, make sure to assign this button to them.
