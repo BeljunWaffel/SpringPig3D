@@ -5,9 +5,14 @@ using UnityEngine;
 public class GameSetup : MonoBehaviour
 {
     public string _levelName;
+    public Transform _gatePrefab;
+    public Transform _buttonPrefab;
 
     private Dictionary<string, int> itemCounts;
     private Dictionary<string, List<Heights>> verticalDefinitions;
+
+    private Dictionary<int, GameObject> buttons; // Maps the button number to actual button.
+    private Dictionary<int, List<Transform>> gates; // Maps the gate button to the gates opened by that button.
 
     // Containers
     private GameObject wallsContainer;
@@ -122,10 +127,31 @@ public class GameSetup : MonoBehaviour
             else if (item is string)
             {
                 var itemType = Convert.ToString(item);
-                if (itemType.StartsWith("1."))
+                if (itemType.StartsWith(Constants.CUBE_PREFIX))
                 {
-                    var height = Convert.ToInt32(itemType.Substring(2));
-                    CreateCube(height, col, row, 0, CreateUniqueItemName("Cube_" + height));
+                    var height = Convert.ToInt32(itemType.Substring(Constants.CUBE_PREFIX.Length));
+                    CreateCube(height, col, row, 0);
+                } 
+                else if (itemType.StartsWith(Constants.GATE_PREFIX))
+                {
+                    InstantiateGatesAndButtonDictionaries();
+                    var periodIndex = itemType.IndexOf('.', Constants.GATE_PREFIX.Length);
+                    var height = Convert.ToInt32(itemType.Substring(Constants.GATE_PREFIX.Length, periodIndex - Constants.GATE_PREFIX.Length));
+                    var buttonNumber = Convert.ToInt32(itemType.Substring(periodIndex + 1));
+                    
+                    CreateGate(height, col, row, 0, buttonNumber);
+                }
+                else if (itemType.StartsWith(Constants.NO_TOGGLE_BUTTON_PREFIX))
+                {
+                    InstantiateGatesAndButtonDictionaries();
+                    var buttonNumber = Convert.ToInt32(itemType.Substring(Constants.NO_TOGGLE_BUTTON_PREFIX.Length));
+                    CreateButton(col, row, 0, buttonNumber);
+                }
+                else if (itemType.StartsWith(Constants.TOGGLE_BUTTON_PREFIX))
+                {
+                    InstantiateGatesAndButtonDictionaries();
+                    var buttonNumber = Convert.ToInt32(itemType.Substring(Constants.TOGGLE_BUTTON_PREFIX.Length));
+                    CreateButton(col, row, 0, buttonNumber);
                 }
                 else
                 {
@@ -146,7 +172,7 @@ public class GameSetup : MonoBehaviour
             }
         }
     }
-
+    
     private void ParseIntsAndCreateGameObjects(int id, int col, int row, int startHeight = 0, int endHeight = 0)
     {
         switch (id)
@@ -157,7 +183,7 @@ public class GameSetup : MonoBehaviour
             case 1:
                 // Cube of Height 1
                 int height = endHeight - startHeight;
-                CreateCube(height, col, row, startHeight, CreateUniqueItemName("Cube_1"));
+                CreateCube(height, col, row, startHeight);
                 break;
             default:
                 // Do Nothing
@@ -175,19 +201,73 @@ public class GameSetup : MonoBehaviour
         }
     }
 
-    private GameObject CreateCube(float height, int column, int row, int startHeight, string name)
+    private GameObject CreateCube(float height, int column, int row, int startHeight)
     {
         var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
         cube.AddComponent<BoxCollider>();
-
-        // +1 to give a buffer on both sides, so the walls superpose at the edges
+        
         cube.transform.localScale = new Vector3(1f, height, 1f);
         cube.transform.position = new Vector3(0.5f + column, height / 2.0f + startHeight, -.5f - row);
 
         cube.transform.parent = nonInteractableObjectsContainer.transform;
-        cube.name = name;
+        cube.name = CreateUniqueItemName("Cube_" + height);
 
         return cube;
+    }
+
+    private Transform CreateGate(float height, int col, int row, int startHeight, int buttonNumber)
+    {
+        var gate = Instantiate(_gatePrefab, interactableObjectsContainer.transform);
+
+        gate.localScale = new Vector3(1f, height, 1f);
+        gate.position = new Vector3(0.5f + col, height / 2.0f + startHeight, -.5f - row);
+        gate.name = CreateUniqueItemName("Gate_H" + height + "_" + buttonNumber);
+
+        // If button has not been created yet, create an empty GameObject that will be replaced later.
+        GameObject button;
+        if (!buttons.TryGetValue(buttonNumber, out button)) {
+            button = new GameObject();
+            buttons[buttonNumber] = button;
+        }
+
+        gate.GetComponent<GateController>()._button = button;
+
+        List<Transform> gatesList;
+        if (!gates.TryGetValue(buttonNumber, out gatesList))
+        {
+            gates[buttonNumber] = new List<Transform>
+            {
+                gate
+            };
+        }
+        else
+        {
+            gates[buttonNumber].Add(gate);
+        }
+
+        return gate;
+    }
+
+    private Transform CreateButton(int col, int row, int startHeight, int buttonNumber)
+    {
+        var button = Instantiate(_buttonPrefab, interactableObjectsContainer.transform);
+
+        button.localScale = new Vector3(.5f, .25f, .5f);
+        button.position = new Vector3(0.25f + col, .25f / 2.0f + startHeight, -.25f - row);
+        button.name = CreateUniqueItemName("Button_" + buttonNumber);
+        
+        // If gates already exist for this button, make sure to assign this button to them.
+        List<Transform> gatesList;
+        if (gates.TryGetValue(buttonNumber, out gatesList)) {
+            foreach (var gate in gatesList)
+            {
+                gate.GetComponent<GateController>()._button = button.gameObject;
+            }
+        }
+
+        buttons[buttonNumber] = button.gameObject;
+
+        return button;
     }
 
     private string CreateUniqueItemName(string key)
@@ -201,5 +281,18 @@ public class GameSetup : MonoBehaviour
         var result = key + " (" + itemNumber + ")";
 
         return result;
+    }
+
+    private void InstantiateGatesAndButtonDictionaries()
+    {
+        if (buttons == null)
+        {
+            buttons = new Dictionary<int, GameObject>();
+        }
+
+        if (gates == null)
+        {
+            gates = new Dictionary<int, List<Transform>>();
+        }
     }
 }

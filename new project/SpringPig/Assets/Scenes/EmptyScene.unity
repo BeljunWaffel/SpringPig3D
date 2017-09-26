@@ -149,6 +149,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _levelName: TestLevel.json
+  _gatePrefab: {fileID: 4714507924153514, guid: 08d53291882792843889474d3ddbf68e,
+    type: 2}
+  _buttonPrefab: {fileID: 4235295429820920, guid: 65b16d05b2f492643819f97a4a01336a,
+    type: 2}
 --- !u!1 &728892629
 GameObject:
   m_ObjectHideFlags: 0

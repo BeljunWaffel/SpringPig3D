@@ -21,4 +21,9 @@ public class Constants
     // Level Creation Constants
     public static float DEFAULT_WALL_WIDTH = .5f;
     public static float DEFAULT_WALL_HEIGHT = 2f;
+    public static string GATE_PREFIX = "gate.";
+    public static string CUBE_PREFIX = "cube.";
+    public static string TOGGLE_BUTTON_PREFIX = "togButton.";
+    public static string NO_TOGGLE_BUTTON_PREFIX = "noTogButton.";
+
 }
