@@ -2,16 +2,21 @@
 	"Name": "TestLevel",
 	"Length": 5,
 	"Width": 5,
+	"Player": {
+		"X": 2,
+		"Y": 2,
+		"Z": 2
+	},
 	"LevelBase": [
-		0,		"gate.3.4",	0,		"togButton.4",	0,
-		0,		0,		0,		0,		0,
-		0,		0,		0,		0,		0,
-		0,		0,		0,		0,		0,
-		0,		0,		0,		0,		0
+		1,		0,		0,		0,		0,
+		0,		"cube.3",	0,		0,		"togButton.3",
+		0,		0,		"playerOnCube",	0,		0,
+		0,		1,		0,		0,		0,
+		0,		0,		0,		0,		"gate.1.3"
 	],
 	"VerticalDefinitions": [
 		{
-			"Id": "a",
+			"Id": "playerOnCube",
 			"Heights": [
 				{
 					"Id": 1,
@@ -24,26 +29,6 @@
 					"EndHeight": 4
 				}
 			]			
-		},
-		{
-			"Id": "b",
-			"Heights": [
-				{
-					"Id": 1,
-					"StartHeight": 1,
-					"EndHeight": 2
-				}
-			]
-		},
-		{
-			"Id": "c",
-			"Heights": [
-				{
-					"Id": 1,
-					"StartHeight": 1,
-					"EndHeight": 3
-				}
-			]
 		}
 	]
 }

@@ -153,6 +153,8 @@ MonoBehaviour:
     type: 2}
   _buttonPrefab: {fileID: 4235295429820920, guid: 65b16d05b2f492643819f97a4a01336a,
     type: 2}
+  _plane: {fileID: 1900100056}
+  _player: {fileID: 1825784546}
 --- !u!1 &728892629
 GameObject:
   m_ObjectHideFlags: 0
@@ -517,3 +519,8 @@ MonoBehaviour:
   _tags:
   - Player
   - Button_Pusher
+--- !u!1 &1900100056 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1523776174287612, guid: a7e705c818da41447a106ed5d54895af,
+    type: 2}
+  m_PrefabInternal: {fileID: 1371265416}

@@ -24,7 +24,7 @@
 			"Id": "a",
 			"Heights": [
 				{
-					"Id": 1,
+					"Id": "a",
 					"StartHeight": 1,
 					"EndHeight": 2
 				},
