@@ -167,6 +167,12 @@ public class GameSetup : MonoBehaviour
             var buttonNumber = Convert.ToInt32(id.Substring(Constants.TOGGLE_BUTTON_PREFIX.Length));
             CreateButton(col, row, startHeight, buttonNumber, isToggle: true);
         }
+        else if (id.StartsWith(Constants.BOX_PREFIX))
+        {
+            InstantiateGatesAndButtonDictionaries();
+            var boxHeight = Convert.ToInt32(id.Substring(Constants.BOX_PREFIX.Length));
+            CreateBox(boxHeight, col, row, startHeight);
+        }
         else if (lookAtVerticalDefinitions)
         {
             var verticalDefinitionList = GetVerticalDefinitionList(id);
@@ -254,6 +260,7 @@ public class GameSetup : MonoBehaviour
     // A button opens a gate.
     private Transform CreateButton(int col, int row, int startHeight, int buttonNumber, bool isToggle)
     {
+        // Button dimensions are the same as the prefab, so I don't change them here.
         var button = Instantiate(_buttonPrefab, interactableObjectsContainer.transform);
         
         var buttonCoordinates = new Vector3(col, startHeight, row);
@@ -276,16 +283,18 @@ public class GameSetup : MonoBehaviour
         return button;
     }
 
-    private Transform CreateBox(int col, int row, int startHeight, int boxNumber)
+    private Transform CreateBox(float height, int col, int row, int startHeight)
     {
-        var box = Instantiate(_boxPrefab, interactableObjectsContainer.transform);
+        var box = Instantiate(_boxPrefab, interactableObjectsContainer.transform, interactableObjectsContainer);
 
-        box.localScale = new Vector3(1f, 1f, 1f);
-        // TODO: box position
-        box.name = CreateUniqueItemName("Box_" + boxNumber);
+        box.localScale = new Vector3(1f, height, 1f);
 
-        return box;
-        
+        var boxCoordinates = new Vector3(col, startHeight, row);
+        var boxDimensions = new Vector3(1f, height, 1f);
+        box.position = TransformUtils.GetLocalPositionFromGridCoordinates(boxCoordinates, boxDimensions);
+        box.name = CreateUniqueItemName("Box_" + height);
+
+        return box;        
     }
 
     private string CreateUniqueItemName(string key)

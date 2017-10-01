@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Scripts.Utils
 {
@@ -17,9 +13,9 @@ namespace Assets.Scripts.Utils
         /// <returns></returns>
         public static Vector3 GetLocalPositionFromGridCoordinates(Vector3 coordinates, Vector3 objectDimensions)
         {
-            return new Vector3(objectDimensions.x / 2 + coordinates.x,
-                                      coordinates.y + objectDimensions.y / 2,
-                                      -.5f * objectDimensions.z - coordinates.z);
+            return new Vector3(.5f + coordinates.x,
+                               coordinates.y + objectDimensions.y / 2,
+                               -.5f - coordinates.z);
         }
     }
 }

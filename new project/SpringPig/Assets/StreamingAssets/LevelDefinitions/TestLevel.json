@@ -10,7 +10,7 @@
 	"LevelBase": [
 		"2 float cube1",0,		0,		0,		"button.NT.3",
 		0,		"cube.2",	0,		"cube.2",	0,
-		0,		0,		"cube.1",	0,		0,
+		0,		0,		"cube.1",	0,		"box.1",
 		0,		"cube.2",	0,		"cube.2",	0,
 		"float cube1",	0,		0,		0,		"gate.1.3"
 	],
@@ -20,11 +20,11 @@
 			"VerticalDefinition": [
 				{
 					"Id": "cube.1",
-					"StartHeight": 1
+					"StartHeight": 0
 				},
 				{
 					"Id": "cube.1",
-					"StartHeight": 3
+					"StartHeight": 2
 				}
 			]
 		},
@@ -33,7 +33,7 @@
 			"VerticalDefinition": [
 				{
 					"Id": "cube.1",
-					"StartHeight": 3
+					"StartHeight": 2
 				}
 			]
 		}
