@@ -1,13 +1,18 @@
 {
 	"Name": "TestLevel",
-	"Length": 5,
-	"Width": 5,
+	"X_Scale": 5,
+	"Z_Scale": 10,
 	"Player": {
 		"X": 2,
 		"Y": 2,
 		"Z": 2
 	},
 	"LevelBase": [
+		"2 float cube1",0,		0,		0,		"button.NT.3",
+		0,		"cube.2",	0,		"cube.2",	0,
+		0,		0,		"cube.1",	0,		"box.1",
+		0,		"cube.2",	0,		"cube.2",	0,
+		"float cube1",	0,		0,		0,		"gate.1.3",
 		"2 float cube1",0,		0,		0,		"button.NT.3",
 		0,		"cube.2",	0,		"cube.2",	0,
 		0,		0,		"cube.1",	0,		"box.1",

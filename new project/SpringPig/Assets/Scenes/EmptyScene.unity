@@ -153,6 +153,7 @@ MonoBehaviour:
     type: 2}
   _buttonPrefab: {fileID: 4235295429820920, guid: 65b16d05b2f492643819f97a4a01336a,
     type: 2}
+  _boxPrefab: {fileID: 4775193322776776, guid: 10d6ec63015ab8548b57385ab033c1ab, type: 2}
   _plane: {fileID: 1900100056}
   _player: {fileID: 1825784546}
 --- !u!1 &728892629

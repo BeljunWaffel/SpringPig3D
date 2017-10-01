@@ -12,8 +12,8 @@ public class GameSetup : MonoBehaviour
     public GameObject _plane;
     public GameObject _player;
 
-    private int planeWidth;
-    private int planeLength;
+    private int planeZScale;
+    private int planeXScale;
 
     private Dictionary<string, int> itemCounts;
     private List<VerticalDefinitions> verticalDefinitionsList;
@@ -45,8 +45,8 @@ public class GameSetup : MonoBehaviour
         }
         else
         {
-            planeLength = levelDefinition.Length;
-            planeWidth = levelDefinition.Width;
+            planeXScale = levelDefinition.X_Scale;
+            planeZScale = levelDefinition.Z_Scale;
 
             ScalePlane();
             CreateOuterWalls();
@@ -62,28 +62,28 @@ public class GameSetup : MonoBehaviour
     private void ScalePlane()
     {
         // Default plane dim is 10x10.
-        _plane.transform.localScale = new Vector3(planeLength / 10.0f, 1f, planeWidth / 10.0f);
+        _plane.transform.localScale = new Vector3(planeXScale / 10.0f, 1f, planeZScale / 10.0f);
 
         // Top left corner is 0,0
-        _plane.transform.position = new Vector3(planeWidth / 2.0f, 0f, -planeLength / 2.0f);
+        _plane.transform.position = new Vector3(planeXScale / 2.0f, 0f, -planeZScale / 2.0f);
     }
 
     private void CreateOuterWalls()
     {
         wallsContainer = new GameObject("Walls");
-        var westWall = CreateWall(planeWidth, "West Wall", wallsContainer);
-        var eastWall = CreateWall(planeWidth, "East Wall", wallsContainer);
-        var northWall = CreateWall(planeLength, "North Wall", wallsContainer);
-        var southWall = CreateWall(planeLength, "South Wall", wallsContainer);
+        var westWall = CreateWall(planeZScale, "West Wall", wallsContainer);
+        var eastWall = CreateWall(planeZScale, "East Wall", wallsContainer);
+        var northWall = CreateWall(planeXScale, "North Wall", wallsContainer);
+        var southWall = CreateWall(planeXScale, "South Wall", wallsContainer);
 
         var widthOffset = Constants.DEFAULT_WALL_WIDTH / 2;
 
-        westWall.transform.position = new Vector3(-1.0f * widthOffset, 0f, -planeLength / 2.0f);
-        eastWall.transform.position = new Vector3(planeWidth + widthOffset, 0f, -planeLength / 2.0f);
+        westWall.transform.position = new Vector3(-1.0f * widthOffset, 0f, -planeZScale / 2.0f);
+        eastWall.transform.position = new Vector3(planeXScale + widthOffset, 0f, -planeZScale / 2.0f);
 
-        northWall.transform.position = new Vector3(planeWidth / 2.0f, 0f, widthOffset);
+        northWall.transform.position = new Vector3(planeXScale / 2.0f, 0f, widthOffset);
         northWall.transform.Rotate(new Vector3(0f, 90f, 0f));
-        southWall.transform.position = new Vector3(planeWidth / 2.0f, 0f, -1.0f * planeLength - widthOffset);
+        southWall.transform.position = new Vector3(planeXScale / 2.0f, 0f, -1.0f * planeZScale - widthOffset);
         southWall.transform.Rotate(new Vector3(0f, 90f, 0f));
     }
 
@@ -106,7 +106,7 @@ public class GameSetup : MonoBehaviour
     private void SetupLevelContents(LevelDefinition levelDefinition)
     {
         // Ensure # of items in levelBase is equal to specified length/width
-        if (planeLength * planeWidth != levelDefinition.LevelBase.Count)
+        if (planeXScale * planeZScale != levelDefinition.LevelBase.Count)
         {
             throw new ArgumentNullException("Invalid JSON. LevelBase size does not match length/width arguments.");
         }
@@ -123,8 +123,8 @@ public class GameSetup : MonoBehaviour
                 continue;
             }
 
-            var row = i / planeWidth;
-            var col = i % planeLength;
+            var row = i / planeXScale;
+            var col = i % planeXScale;
 
             VerticalDefinition itemVerticalDefinition = new VerticalDefinition()
             {

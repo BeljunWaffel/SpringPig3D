@@ -26,8 +26,8 @@ public class VerticalDefinitions
 public class LevelDefinition
 {
     public string Name;
-    public int Length;
-    public int Width;
+    public int X_Scale;
+    public int Z_Scale;
     public Player Player { get; set; }
     public List<string> LevelBase;
     public List<VerticalDefinitions> VerticalDefinitions;
