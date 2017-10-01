@@ -8,27 +8,34 @@
 		"Z": 2
 	},
 	"LevelBase": [
-		1,		0,		0,		0,		0,
-		0,		"cube.3",	0,		0,		"togButton.3",
-		0,		0,		"playerOnCube",	0,		0,
-		0,		1,		0,		0,		0,
-		0,		0,		0,		0,		"gate.1.3"
+		"2 float cube1",0,		0,		0,		"button.NT.3",
+		0,		"cube.2",	0,		"cube.2",	0,
+		0,		0,		"cube.1",	0,		0,
+		0,		"cube.2",	0,		"cube.2",	0,
+		"float cube1",	0,		0,		0,		"gate.1.3"
 	],
 	"VerticalDefinitions": [
 		{
-			"Id": "playerOnCube",
-			"Heights": [
+			"Id": "2 float cube1",
+			"VerticalDefinition": [
 				{
-					"Id": 1,
-					"StartHeight": 1,
-					"EndHeight": 2
+					"Id": "cube.1",
+					"StartHeight": 1
 				},
 				{
-					"Id": 1,
-					"StartHeight": 3,
-					"EndHeight": 4
+					"Id": "cube.1",
+					"StartHeight": 3
 				}
-			]			
+			]
+		},
+		{
+			"Id": "float cube1",
+			"VerticalDefinition": [
+				{
+					"Id": "cube.1",
+					"StartHeight": 3
+				}
+			]
 		}
 	]
 }

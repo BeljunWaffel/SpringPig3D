@@ -9,18 +9,17 @@ public class Player
 }
 
 [System.Serializable]
-public class Heights
+public class VerticalDefinition
 {
-    public object Id;
+    public string Id;
     public int StartHeight;
-    public int EndHeight;
 }
 
 [System.Serializable]
 public class VerticalDefinitions
 {
     public string Id;
-    public List<Heights> Heights;
+    public List<VerticalDefinition> VerticalDefinition;
 }
 
 [System.Serializable]
@@ -30,6 +29,6 @@ public class LevelDefinition
     public int Length;
     public int Width;
     public Player Player { get; set; }
-    public List<object> LevelBase;
+    public List<string> LevelBase;
     public List<VerticalDefinitions> VerticalDefinitions;
 }

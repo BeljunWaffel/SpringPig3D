@@ -7,18 +7,14 @@
 	"Value": "Cube of Height X"
 },
 {
+	"Key": "box.<X>",
+	"Value": "Box of height X"
+},
+{
 	"Key": "gate.<X>.<Y>",
 	"Value": "Gate of Height X With Button Y"
 },
 {
-	"Key": "noTogButton.<Y>",
-	"Value": "No-Toggle Button That Opens Gate Y"
-},
-{
-	"Key": "togButton.<Y>",
-	"Value": "Toggle Button That Opens Gate Y"
-},
-{
-	"Key": 5,
-	"Value": "Box"
+	"Key": "button.<T/NT>.<Y>",
+	"Value": "Button That Opens Gate Y. T = Toggle, NT = No Toggle"
 },

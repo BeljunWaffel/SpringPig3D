@@ -8,6 +8,7 @@ public class GameSetup : MonoBehaviour
     public string _levelName;
     public Transform _gatePrefab;
     public Transform _buttonPrefab;
+    public Transform _boxPrefab;
     public GameObject _plane;
     public GameObject _player;
 
@@ -15,7 +16,7 @@ public class GameSetup : MonoBehaviour
     private int planeLength;
 
     private Dictionary<string, int> itemCounts;
-    private Dictionary<string, List<Heights>> verticalDefinitions;
+    private List<VerticalDefinitions> verticalDefinitionsList;
 
     private Dictionary<int, GameObject> buttons; // Maps the button number to actual button.
     private Dictionary<int, List<Transform>> gates; // Maps the gate button to the gates opened by that button.
@@ -49,7 +50,7 @@ public class GameSetup : MonoBehaviour
 
             ScalePlane();
             CreateOuterWalls();
-            ParseVerticalDefinitions(levelDefinition);
+            verticalDefinitionsList = levelDefinition.VerticalDefinitions;
             SetupLevelContents(levelDefinition);
             
             var playerCoordinates = new Vector3(levelDefinition.Player.X, levelDefinition.Player.Y, levelDefinition.Player.Z);
@@ -117,99 +118,84 @@ public class GameSetup : MonoBehaviour
         for (int i = 0; i < levelDefinition.LevelBase.Count; i++)
         {
             var item = levelDefinition.LevelBase[i];
+            if (item == "0")
+            {
+                continue;
+            }
+
             var row = i / planeWidth;
             var col = i % planeLength;
 
-            ParseJsonId(item, col, row, true);
+            VerticalDefinition itemVerticalDefinition = new VerticalDefinition()
+            {
+                Id = item,
+                StartHeight = 0
+            };
+
+            ParseStringsAndCreateGameObjects(itemVerticalDefinition, col, row, lookAtVerticalDefinitions: true);
         }
     }
 
-    private void ParseJsonId(object item, int col, int row, bool lookAtVerticalDefinitions, int startHeight = 0, int endHeight = 0)
+    private void ParseStringsAndCreateGameObjects(VerticalDefinition itemVerticalDefinition, int col, int row, bool lookAtVerticalDefinitions)
     {
-        if (item is Int64)
-        {
-            var id = Convert.ToInt32(item);
-            ParseIntsAndCreateGameObjects(id, col, row, startHeight, endHeight);
-        }
-        else if (item is string)
-        {
-            var itemType = Convert.ToString(item);
-            ParseStringsAndCreateGameObjects(itemType, col, row, lookAtVerticalDefinitions);
-        }
-    }
-    
-    private void ParseIntsAndCreateGameObjects(int id, int col, int row, int startHeight = 0, int endHeight = 0)
-    {
-        switch (id)
-        {
-            case 0:
-                // Do Nothing
-                break;
-            case 1:
-                // Cube of Height 1
-                int height = Math.Max(endHeight - startHeight, 1);
-                CreateCube(height, col, row, startHeight);
-                break;
-            default:
-                // Do Nothing
-                break;
-        }
-    }
+        var id = itemVerticalDefinition.Id;
+        var startHeight = itemVerticalDefinition.StartHeight;
 
-    private void ParseStringsAndCreateGameObjects(string itemType, int col, int row, bool lookAtVerticalDefinitions)
-    {
-        if (itemType.StartsWith(Constants.CUBE_PREFIX))
+        if (id.StartsWith(Constants.CUBE_PREFIX))
         {
-            var height = Convert.ToInt32(itemType.Substring(Constants.CUBE_PREFIX.Length));
-            CreateCube(height, col, row, 0);
+            var height = Convert.ToInt32(id.Substring(Constants.CUBE_PREFIX.Length));
+            CreateCube(height, col, row, startHeight);
         }
-        else if (itemType.StartsWith(Constants.GATE_PREFIX))
+        else if (id.StartsWith(Constants.GATE_PREFIX))
         {
             InstantiateGatesAndButtonDictionaries();
-            var periodIndex = itemType.IndexOf('.', Constants.GATE_PREFIX.Length);
-            var height = Convert.ToInt32(itemType.Substring(Constants.GATE_PREFIX.Length, periodIndex - Constants.GATE_PREFIX.Length));
-            var buttonNumber = Convert.ToInt32(itemType.Substring(periodIndex + 1));
+            var periodIndex = id.IndexOf('.', Constants.GATE_PREFIX.Length);
+            var height = Convert.ToInt32(id.Substring(Constants.GATE_PREFIX.Length, periodIndex - Constants.GATE_PREFIX.Length));
+            var buttonNumber = Convert.ToInt32(id.Substring(periodIndex + 1));
 
-            CreateGate(height, col, row, 0, buttonNumber);
+            CreateGate(height, col, row, startHeight, buttonNumber);
         }
-        else if (itemType.StartsWith(Constants.NO_TOGGLE_BUTTON_PREFIX))
+        else if (id.StartsWith(Constants.NO_TOGGLE_BUTTON_PREFIX))
         {
             InstantiateGatesAndButtonDictionaries();
-            var buttonNumber = Convert.ToInt32(itemType.Substring(Constants.NO_TOGGLE_BUTTON_PREFIX.Length));
-            CreateButton(col, row, 0, buttonNumber, false);
+            var buttonNumber = Convert.ToInt32(id.Substring(Constants.NO_TOGGLE_BUTTON_PREFIX.Length));
+            CreateButton(col, row, startHeight, buttonNumber, isToggle: false);
         }
-        else if (itemType.StartsWith(Constants.TOGGLE_BUTTON_PREFIX))
+        else if (id.StartsWith(Constants.TOGGLE_BUTTON_PREFIX))
         {
             InstantiateGatesAndButtonDictionaries();
-            var buttonNumber = Convert.ToInt32(itemType.Substring(Constants.TOGGLE_BUTTON_PREFIX.Length));
-            CreateButton(col, row, 0, buttonNumber, true);
+            var buttonNumber = Convert.ToInt32(id.Substring(Constants.TOGGLE_BUTTON_PREFIX.Length));
+            CreateButton(col, row, startHeight, buttonNumber, isToggle: true);
         }
         else if (lookAtVerticalDefinitions)
         {
-            List<Heights> heights;
-            if (!verticalDefinitions.TryGetValue(itemType, out heights))
+            var verticalDefinitionList = GetVerticalDefinitionList(id);
+            if (verticalDefinitionList == null)
             {
-                Debug.Log("Could not find height definition for " + itemType);
+                Debug.Log("Could not find height definition for " + id);
             }
             else
             {
-                foreach (var height in heights)
+                foreach (var verticalDefinition in verticalDefinitionList)
                 {
                     // Doesn't allow nesting of vertical definitions within vertical definitions.
-                    ParseJsonId(height.Id, col, row, false, height.StartHeight, height.EndHeight);
+                    ParseStringsAndCreateGameObjects(verticalDefinition, col, row, lookAtVerticalDefinitions: false);
                 }
             }
         }
     }
 
-    private void ParseVerticalDefinitions(LevelDefinition levelDefinition)
+    private List<VerticalDefinition> GetVerticalDefinitionList(string id)
     {
-        verticalDefinitions = new Dictionary<string, List<Heights>>();
-        foreach (var verticalDefinition in levelDefinition.VerticalDefinitions)
+        foreach (var verticalDefinitions in verticalDefinitionsList)
         {
-            var id = verticalDefinition.Id;
-            verticalDefinitions.Add(id, verticalDefinition.Heights);
+            if (id == verticalDefinitions.Id)
+            {
+                return verticalDefinitions.VerticalDefinition;
+            };
         }
+
+        return null;
     }
 
     private GameObject CreateCube(float height, int col, int row, int startHeight)
@@ -234,7 +220,10 @@ public class GameSetup : MonoBehaviour
         var gate = Instantiate(_gatePrefab, interactableObjectsContainer.transform);
 
         gate.localScale = new Vector3(1f, height, 1f);
-        gate.position = new Vector3(0.5f + col, height / 2.0f + startHeight, -.5f - row);
+
+        var gateCoordinates = new Vector3(col, startHeight, row);
+        var gateDimensions = new Vector3(1f, height, 1f);
+        gate.position = TransformUtils.GetLocalPositionFromGridCoordinates(gateCoordinates, gateDimensions);
         gate.name = CreateUniqueItemName("Gate_H" + height + "_" + buttonNumber);
 
         // If button has not been created yet, create an empty GameObject that will be replaced later.
@@ -262,6 +251,7 @@ public class GameSetup : MonoBehaviour
         return gate;
     }
 
+    // A button opens a gate.
     private Transform CreateButton(int col, int row, int startHeight, int buttonNumber, bool isToggle)
     {
         var button = Instantiate(_buttonPrefab, interactableObjectsContainer.transform);
@@ -284,6 +274,18 @@ public class GameSetup : MonoBehaviour
         buttons[buttonNumber] = button.gameObject;
 
         return button;
+    }
+
+    private Transform CreateBox(int col, int row, int startHeight, int boxNumber)
+    {
+        var box = Instantiate(_boxPrefab, interactableObjectsContainer.transform);
+
+        box.localScale = new Vector3(1f, 1f, 1f);
+        // TODO: box position
+        box.name = CreateUniqueItemName("Box_" + boxNumber);
+
+        return box;
+        
     }
 
     private string CreateUniqueItemName(string key)
