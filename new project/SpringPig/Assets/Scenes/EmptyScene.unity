@@ -156,6 +156,7 @@ MonoBehaviour:
   _boxPrefab: {fileID: 4775193322776776, guid: 10d6ec63015ab8548b57385ab033c1ab, type: 2}
   _plane: {fileID: 1900100056}
   _player: {fileID: 1825784546}
+  noFrictionMaterial: {fileID: 13400000, guid: 51156876978881041b92a2c1ce72f0b0, type: 2}
 --- !u!1 &1160924254
 GameObject:
   m_ObjectHideFlags: 0

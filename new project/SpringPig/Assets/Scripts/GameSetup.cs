@@ -11,6 +11,7 @@ public class GameSetup : MonoBehaviour
     public Transform _boxPrefab;
     public GameObject _plane;
     public GameObject _player;
+    public PhysicMaterial noFrictionMaterial;
 
     private int planeZScale;
     private int planeXScale;
@@ -104,35 +105,10 @@ public class GameSetup : MonoBehaviour
         invisEastWall.transform.Translate(Constants.PLAYER_WIDTH, Constants.MAX_ENERGY / 2, 0);
         invisNorthWall.transform.Translate(0, Constants.MAX_ENERGY / 2, Constants.PLAYER_WIDTH);
         invisSouthWall.transform.Translate(0, Constants.MAX_ENERGY / 2, -Constants.PLAYER_WIDTH);
-        
+
         // Rotate north and south after translation, otherwise it applies the translation wrong :/
         invisNorthWall.transform.rotation = northWall.transform.rotation;
         invisSouthWall.transform.rotation = southWall.transform.rotation;
-    }
-
-    private GameObject CreateWall(float length, string name, GameObject parent, bool visible = true)
-    {
-        var wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        wall.AddComponent<BoxCollider>();
-
-        // +1 to give a buffer on both sides, so the walls superpose at the edges
-        wall.transform.localScale = new Vector3(Constants.DEFAULT_WALL_WIDTH, 
-                                                Constants.DEFAULT_WALL_HEIGHT, 
-                                                length + 1f);
-
-        wall.transform.parent = parent.transform;
-        wall.name = name;
-
-        if (!visible)
-        {
-            var renderer = wall.GetComponent<Renderer>();
-            renderer.enabled = false;
-
-            // Make the invis wall taller
-            wall.transform.localScale += new Vector3(0, Constants.MAX_ENERGY, 0);
-        }
-
-        return wall;
     }
 
     private void SetupLevelContents(LevelDefinition levelDefinition)
@@ -236,11 +212,37 @@ public class GameSetup : MonoBehaviour
         return null;
     }
 
+    private GameObject CreateWall(float length, string name, GameObject parent, bool visible = true)
+    {
+        var wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        wall.GetComponent<Collider>().material = noFrictionMaterial;
+
+        // +1 to give a buffer on both sides, so the walls superpose at the edges
+        wall.transform.localScale = new Vector3(Constants.DEFAULT_WALL_WIDTH,
+                                                Constants.DEFAULT_WALL_HEIGHT,
+                                                length + 1f);
+
+        wall.transform.parent = parent.transform;
+        wall.name = name;
+        wall.GetComponent<Collider>().material = noFrictionMaterial;
+
+        if (!visible)
+        {
+            var renderer = wall.GetComponent<Renderer>();
+            renderer.enabled = false;
+
+            // Make the invis wall taller
+            wall.transform.localScale += new Vector3(0, Constants.MAX_ENERGY, 0);
+        }
+
+        return wall;
+    }
+
     private GameObject CreateCube(float height, int col, int row, int startHeight)
     {
         var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        cube.AddComponent<BoxCollider>();
-        
+        cube.GetComponent<Collider>().material = noFrictionMaterial;
+
         cube.transform.localScale = new Vector3(1f, height, 1f);
 
         var cubeCoordinates = new Vector3(col, startHeight, row);
@@ -256,13 +258,14 @@ public class GameSetup : MonoBehaviour
     private Transform CreateGate(float height, int col, int row, int startHeight, int buttonNumber)
     {
         var gate = Instantiate(_gatePrefab, interactableObjectsContainer.transform);
+        gate.GetComponent<Collider>().material = noFrictionMaterial;
 
         gate.localScale = new Vector3(1f, height, 1f);
 
         var gateCoordinates = new Vector3(col, startHeight, row);
         var gateDimensions = new Vector3(1f, height, 1f);
         gate.position = TransformUtils.GetLocalPositionFromGridCoordinates(gateCoordinates, gateDimensions);
-        gate.name = CreateUniqueItemName("Gate_H" + height + "_" + buttonNumber);
+        gate.name = CreateUniqueItemName("Gate_H" + height + "_" + buttonNumber);        
 
         // If button has not been created yet, create an empty GameObject that will be replaced later.
         GameObject button;
@@ -288,18 +291,18 @@ public class GameSetup : MonoBehaviour
 
         return gate;
     }
-
-    // A button opens a gate.
+    
     private Transform CreateButton(int col, int row, int startHeight, int buttonNumber, bool isToggle)
     {
         // Button dimensions are the same as the prefab, so I don't change them here.
         var button = Instantiate(_buttonPrefab, interactableObjectsContainer.transform);
-        
+        button.GetComponent<Collider>().material = noFrictionMaterial;
+
         var buttonCoordinates = new Vector3(col, startHeight, row);
         var buttonDimensions = new Vector3(.5f, .25f, .5f);
         button.position = TransformUtils.GetLocalPositionFromGridCoordinates(buttonCoordinates, buttonDimensions);
         button.name = CreateUniqueItemName("Button_" + (isToggle ? "T_" : "NT_") + buttonNumber);
-        
+
         // If gates already exist for this button, make sure to assign this button to them.
         List<Transform> gatesList;
         if (gates.TryGetValue(buttonNumber, out gatesList)) {
@@ -318,6 +321,7 @@ public class GameSetup : MonoBehaviour
     private Transform CreateBox(float height, int col, int row, int startHeight)
     {
         var box = Instantiate(_boxPrefab, interactableObjectsContainer.transform, interactableObjectsContainer);
+        box.GetComponent<Collider>().material = noFrictionMaterial;
 
         box.localScale = new Vector3(1f, height, 1f);
 
