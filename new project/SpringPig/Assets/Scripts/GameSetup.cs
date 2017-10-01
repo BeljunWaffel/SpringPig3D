@@ -255,9 +255,10 @@ public class GameSetup : MonoBehaviour
     private Transform CreateButton(int col, int row, int startHeight, int buttonNumber, bool isToggle)
     {
         var button = Instantiate(_buttonPrefab, interactableObjectsContainer.transform);
-
-        button.localScale = new Vector3(.5f, .25f, .5f);
-        button.position = new Vector3(0.5f + col, .25f / 2.0f + startHeight, -.5f - row);
+        
+        var buttonCoordinates = new Vector3(col, startHeight, row);
+        var buttonDimensions = new Vector3(.5f, .25f, .5f);
+        button.position = TransformUtils.GetLocalPositionFromGridCoordinates(buttonCoordinates, buttonDimensions);
         button.name = CreateUniqueItemName("Button_" + buttonNumber);
         
         // If gates already exist for this button, make sure to assign this button to them.
@@ -270,7 +271,6 @@ public class GameSetup : MonoBehaviour
         }
 
         button.GetComponent<ButtonController>()._toggleable = isToggle;
-
         buttons[buttonNumber] = button.gameObject;
 
         return button;
