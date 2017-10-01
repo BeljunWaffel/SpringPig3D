@@ -266,7 +266,7 @@ public class GameSetup : MonoBehaviour
         var buttonCoordinates = new Vector3(col, startHeight, row);
         var buttonDimensions = new Vector3(.5f, .25f, .5f);
         button.position = TransformUtils.GetLocalPositionFromGridCoordinates(buttonCoordinates, buttonDimensions);
-        button.name = CreateUniqueItemName("Button_" + buttonNumber);
+        button.name = CreateUniqueItemName("Button_" + (isToggle ? "T_" : "NT_") + buttonNumber);
         
         // If gates already exist for this button, make sure to assign this button to them.
         List<Transform> gatesList;
