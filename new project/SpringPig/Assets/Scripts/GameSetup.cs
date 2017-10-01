@@ -54,7 +54,8 @@ public class GameSetup : MonoBehaviour
             SetupLevelContents(levelDefinition);
             
             var playerCoordinates = new Vector3(levelDefinition.Player.X, levelDefinition.Player.Y, levelDefinition.Player.Z);
-            var playerDimensions = new Vector3(Constants.PLAYER_WIDTH, Constants.PLAYER_HEIGHT, Constants.PLAYER_LENGTH);
+            // For some reason cylinders in unity start with a default height of 2, so player_height is scaled to half.
+            var playerDimensions = new Vector3(Constants.PLAYER_WIDTH, 1f, Constants.PLAYER_LENGTH);
             _player.transform.position = TransformUtils.GetLocalPositionFromGridCoordinates(playerCoordinates, playerDimensions);
         }
 	}
@@ -85,9 +86,31 @@ public class GameSetup : MonoBehaviour
         northWall.transform.Rotate(new Vector3(0f, 90f, 0f));
         southWall.transform.position = new Vector3(planeXScale / 2.0f, 0f, -1.0f * planeZScale - widthOffset);
         southWall.transform.Rotate(new Vector3(0f, 90f, 0f));
+
+        // Create invisible walls so you can't fall off the sides
+        var invisWestWall = CreateWall(planeZScale, "Invisible West Wall", wallsContainer, visible: false);
+        var invisEastWall = CreateWall(planeZScale, "Invisible East Wall", wallsContainer, visible: false);
+        var invisNorthWall = CreateWall(planeXScale, "Invisible North Wall", wallsContainer, visible: false);
+        var invisSouthWall = CreateWall(planeXScale, "Invisible South Wall", wallsContainer, visible: false);
+
+        // Overlay the walls
+        invisWestWall.transform.position = westWall.transform.position;
+        invisEastWall.transform.position = eastWall.transform.position;
+        invisNorthWall.transform.position = northWall.transform.position;
+        invisSouthWall.transform.position = southWall.transform.position;
+
+        // Offset the invis walls
+        invisWestWall.transform.Translate(-Constants.PLAYER_WIDTH, Constants.MAX_ENERGY / 2, 0);
+        invisEastWall.transform.Translate(Constants.PLAYER_WIDTH, Constants.MAX_ENERGY / 2, 0);
+        invisNorthWall.transform.Translate(0, Constants.MAX_ENERGY / 2, Constants.PLAYER_WIDTH);
+        invisSouthWall.transform.Translate(0, Constants.MAX_ENERGY / 2, -Constants.PLAYER_WIDTH);
+        
+        // Rotate north and south after translation, otherwise it applies the translation wrong :/
+        invisNorthWall.transform.rotation = northWall.transform.rotation;
+        invisSouthWall.transform.rotation = southWall.transform.rotation;
     }
 
-    private GameObject CreateWall(float length, string name, GameObject parent)
+    private GameObject CreateWall(float length, string name, GameObject parent, bool visible = true)
     {
         var wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
         wall.AddComponent<BoxCollider>();
@@ -99,6 +122,15 @@ public class GameSetup : MonoBehaviour
 
         wall.transform.parent = parent.transform;
         wall.name = name;
+
+        if (!visible)
+        {
+            var renderer = wall.GetComponent<Renderer>();
+            renderer.enabled = false;
+
+            // Make the invis wall taller
+            wall.transform.localScale += new Vector3(0, Constants.MAX_ENERGY, 0);
+        }
 
         return wall;
     }
