@@ -19,7 +19,11 @@ public class Constants
     // Box
     public static float BOX_SPEED = 1f;
 
+    // Pickup Types
+    public static readonly string PICKUP_ADDITION = "Addition";          // Pickup Effect - Addition
+
     // Tags
+    public static string PLAYER = "Player";
     public static string BOX = "Box";                           // Tag used to define a box
     public static string BUTTON_PUSHER = "Button_Pusher";       // Tag to define things that can push buttons
 
