@@ -19,7 +19,7 @@ public class ButtonController : MonoBehaviour {
         TagList otherTags = other.gameObject.GetComponent<TagList>();
 
         if (otherTags != null && 
-            otherTags.ContainsTag(Constants.BUTTON_PUSHER))
+            otherTags.ContainsTag(Constants.TAG_BUTTON_PUSHER))
         {
             numberofPressingObjects++;
             PushButton();
@@ -31,7 +31,7 @@ public class ButtonController : MonoBehaviour {
         TagList otherTags = other.gameObject.GetComponent<TagList>();
 
         if (otherTags != null && 
-            otherTags.ContainsTag(Constants.BUTTON_PUSHER))
+            otherTags.ContainsTag(Constants.TAG_BUTTON_PUSHER))
         {
             numberofPressingObjects--;
             UnpushButton();

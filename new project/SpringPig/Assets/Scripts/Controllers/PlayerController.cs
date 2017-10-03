@@ -150,7 +150,7 @@ public class PlayerController : MonoBehaviour {
     {
         var gameObject = collision.gameObject;
         TagList collisionTags = gameObject.GetComponent<TagList>();
-        if (collisionTags != null && collisionTags.ContainsTag(Constants.BOX))
+        if (collisionTags != null && collisionTags.ContainsTag(Constants.TAG_BOX))
         {
             PushBox(gameObject, collision);
         }
@@ -160,7 +160,7 @@ public class PlayerController : MonoBehaviour {
     {
         var gameObject = collision.gameObject;
         TagList collisionTags = gameObject.GetComponent<TagList>();
-        if (collisionTags != null && collisionTags.ContainsTag(Constants.BOX))
+        if (collisionTags != null && collisionTags.ContainsTag(Constants.TAG_BOX))
         {
             ResetPushingBoxSpeed(gameObject.GetComponent<Rigidbody>());
         }
