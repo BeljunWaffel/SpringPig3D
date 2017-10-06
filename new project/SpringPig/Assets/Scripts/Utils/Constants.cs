@@ -21,6 +21,7 @@ public class Constants
 
     // Tags
     public static string BOX = "Box";                           // Tag used to define a box
+    public static string PLAYER = "Player";                     // Tag used to define a player
     public static string BUTTON_PUSHER = "Button_Pusher";       // Tag to define things that can push buttons
 
     // Level Creation Constants

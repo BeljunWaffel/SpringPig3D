@@ -24,9 +24,10 @@ GameObject:
   - component: {fileID: 23096537384095416}
   - component: {fileID: 54872454205983462}
   - component: {fileID: 114245364620364650}
+  - component: {fileID: 114344869911811000}
   m_Layer: 0
   m_Name: Box
-  m_TagString: Box
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -124,3 +125,14 @@ MonoBehaviour:
   _tags:
   - Box
   - Button_Pusher
+--- !u!114 &114344869911811000
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1281273253866472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84725b79e292ecb43a19be941f6b41b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
