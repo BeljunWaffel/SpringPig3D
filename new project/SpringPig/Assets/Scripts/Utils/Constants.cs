@@ -19,10 +19,13 @@ public class Constants
     // Box
     public static float BOX_SPEED = 1f;
 
+    // Pickup Types
+    public static readonly string PICKUP_ADDITION = "Addition";          // Pickup Effect - Addition
+
     // Tags
-    public static string BOX = "Box";                           // Tag used to define a box
-    public static string PLAYER = "Player";                     // Tag used to define a player
-    public static string BUTTON_PUSHER = "Button_Pusher";       // Tag to define things that can push buttons
+    public static string TAG_PLAYER = "Player";
+    public static string TAG_BOX = "Box";                           // Tag used to define a box
+    public static string TAG_BUTTON_PUSHER = "Button_Pusher";       // Tag to define things that can push buttons
 
     // Level Creation Constants
     public static float DEFAULT_WALL_WIDTH = .5f;
