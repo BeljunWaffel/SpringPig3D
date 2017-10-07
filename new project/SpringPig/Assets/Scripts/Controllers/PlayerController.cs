@@ -4,14 +4,16 @@ public class PlayerController : MonoBehaviour {
 
     public float _movementMultiplier;
     public int _energy;
+    public int _gravityMagnitude;
 
     private Rigidbody player;
     private float distToGround;
-    private bool wasGrounded = false;
     private bool isMovingHorizontally = false;
-    
+
     // Needed to calculate energy
-    private float maxHeight = -1;
+    private bool wasGrounded = false;
+    private bool wasInAirBecauseOfMiniJump = false;
+    private int maxHeight = -1;
     private float startingHeight;
     
     // Box interactions
@@ -24,6 +26,7 @@ public class PlayerController : MonoBehaviour {
     void Start()
     {
         player = GetComponent<Rigidbody>();
+        Physics.gravity = new Vector3(0f, -1f * _gravityMagnitude, 0f);
 
         // Get collider to calculate distance to ground for IsGrounded() function.
         var collider = GetComponent<Collider>();
@@ -74,7 +77,7 @@ public class PlayerController : MonoBehaviour {
             isPushingBoxInZ = value;
         }
     }
-
+    
     /**
      * 
      * DISPLAY
@@ -95,32 +98,51 @@ public class PlayerController : MonoBehaviour {
         var jump = Input.GetAxis("Jump");
         var miniJump = Input.GetAxis("MiniJump");
         var isGrounded = IsGrounded();
-        
+
+        // If in the air, calculate max height to determine amount of energy to gain.
+        int currentHeight = Mathf.RoundToInt(player.position.y - player.transform.localScale.y);
+        if (!IsGrounded() && currentHeight > maxHeight)
+        {
+            maxHeight = currentHeight;
+            Debug.Log("MaxHeight:" + maxHeight);
+        }
+
         // If player was in the air before but isn't anymore, calculate how much energy was gained.
         if (!wasGrounded && isGrounded)
         {
-            var energyGain = Mathf.RoundToInt(startingHeight - player.position.y - Constants.ENERGY_DOWNGRADE);
-            IncrementEnergy(energyGain);
+            if (wasInAirBecauseOfMiniJump && currentHeight < startingHeight)
+            {
+                // If you minijump to get to a lower spot, lose 1 extra energy because you were able to jump by 1.
+                var energyGain = Mathf.RoundToInt(maxHeight - currentHeight - Constants.ENERGY_DOWNGRADE - 1);
+                IncrementEnergy(energyGain);
+            }
+            else if(!wasInAirBecauseOfMiniJump)
+            {
+                var energyGain = Mathf.RoundToInt(maxHeight - currentHeight - Constants.ENERGY_DOWNGRADE);
+                IncrementEnergy(energyGain);
+            }
         }
 
         wasGrounded = isGrounded;
 
-        if (IsDebug) PrintMaxJumpHeight();
-
         // Vertical Movement
         if (isGrounded)
         {
-            startingHeight = player.position.y;
+            startingHeight = currentHeight;
+            wasInAirBecauseOfMiniJump = false;
+            maxHeight = 0;
 
-            if (jump != 0)
+            if (jump != 0 && _energy != 0)
             {
                 // Apply velocity directly, since we want an immediate change.
                 // https://docs.unity3d.com/ScriptReference/Rigidbody-velocity.html
                 player.velocity = new Vector3(player.velocity.x, CalculateJumpVelocity(_energy, includeClearance: true), player.velocity.z);
+                _energy = 0;
             }
             else if (miniJump != 0)
             {
                 player.velocity = new Vector3(player.velocity.x, CalculateJumpVelocity(Constants.MINI_JUMP_HEIGHT, includeClearance: true), player.velocity.z);
+                wasInAirBecauseOfMiniJump = true;
             }
         }
     }
@@ -139,9 +161,15 @@ public class PlayerController : MonoBehaviour {
         {
             // Horizontal movement
             Vector3 movement;
-            movement = new Vector3(moveHorizontal * _movementMultiplier,
+            var multiplier = _movementMultiplier;
+            //if (!IsGrounded())
+            //{
+            //    multiplier /= 2;
+            //}
+
+            movement = new Vector3(moveHorizontal * multiplier,
                                    player.velocity.y,
-                                   moveVertical * _movementMultiplier);
+                                   moveVertical * multiplier);
 
             if (isPushingBoxInX && movement.x != 0)
             {
@@ -213,20 +241,5 @@ public class PlayerController : MonoBehaviour {
         return (Mathf.Abs(playerVelocity) < Constants.BOX_SPEED) ?
                playerVelocity :
                MathUtils.IsPositive(playerVelocity) * Constants.BOX_SPEED;
-    }
-
-    // Prints out the max height
-    private void PrintMaxJumpHeight()
-    {
-        // Calculate max height
-        if (!IsGrounded() && player.position.y > maxHeight)
-        {
-            maxHeight = player.position.y;
-        }
-
-        if (IsGrounded() && maxHeight != -1)
-        {
-            Debug.Log(maxHeight);
-        }
     }
 }

@@ -222,6 +222,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _movementMultiplier: 5
   _energy: 2
+  _gravityMagnitude: 18
   IsDebug: 0
 --- !u!124 &124972687606960208
 Behaviour:

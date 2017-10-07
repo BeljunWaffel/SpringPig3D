@@ -82,13 +82,4 @@ public class BoxController : MonoBehaviour
     {
         box.constraints = RigidbodyConstraints.FreezeAll;
     }
-
-    private float GetBoxSpeed(float playerVelocity)
-    {
-        // If player velocity is < Box speed, return player velocity.
-        // Otherwise return boxspeed in the direction the player was moving.
-        return (Mathf.Abs(playerVelocity) < Constants.BOX_SPEED) ?
-               playerVelocity :
-               MathUtils.IsPositive(playerVelocity) * Constants.BOX_SPEED;
-    }
 }
