@@ -8,4 +8,10 @@ public class TagList : MonoBehaviour {
     public bool ContainsTag(string tag) {
         return _tags.Contains(tag);
     }
+
+    public static bool ContainsTag(GameObject gameObject, string tag)
+    {
+        TagList tags = gameObject.GetComponent<TagList>();
+        return tags != null && tags.ContainsTag(tag);
+    }
 }

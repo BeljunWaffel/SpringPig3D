@@ -37,16 +37,7 @@ public class BoxController : MonoBehaviour
 
     private bool IsCollidingWithPlayer(Collision collision)
     {
-        var gameObject = collision.gameObject;
-        TagList collisionTags = gameObject.GetComponent<TagList>();
-        if (collisionTags != null && collisionTags.ContainsTag(Constants.TAG_PLAYER))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return TagList.ContainsTag(collision.gameObject, Constants.TAG_PLAYER);
     }
 
     private void PushBox(PlayerController playerObject)

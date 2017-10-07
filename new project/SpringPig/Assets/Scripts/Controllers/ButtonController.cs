@@ -16,10 +16,7 @@ public class ButtonController : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        TagList otherTags = other.gameObject.GetComponent<TagList>();
-
-        if (otherTags != null && 
-            otherTags.ContainsTag(Constants.TAG_BUTTON_PUSHER))
+        if (TagList.ContainsTag(other.gameObject, Constants.TAG_BUTTON_PUSHER))
         {
             numberofPressingObjects++;
             PushButton();
@@ -28,10 +25,7 @@ public class ButtonController : MonoBehaviour {
 
     private void OnTriggerExit(Collider other)
     {
-        TagList otherTags = other.gameObject.GetComponent<TagList>();
-
-        if (otherTags != null && 
-            otherTags.ContainsTag(Constants.TAG_BUTTON_PUSHER))
+        if (TagList.ContainsTag(other.gameObject, Constants.TAG_BUTTON_PUSHER))
         {
             numberofPressingObjects--;
             UnpushButton();

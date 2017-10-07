@@ -19,10 +19,7 @@ public class PickupController : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        TagList otherTags = other.gameObject.GetComponent<TagList>();
-
-        if (otherTags != null &&
-            otherTags.ContainsTag(Constants.TAG_PLAYER))
+        if (TagList.ContainsTag(other.gameObject, Constants.TAG_PLAYER))
         {
             // Addition - Add the value to the player's current energy
             if (_pickupEffect.Equals(Constants.PICKUP_ADDITION))

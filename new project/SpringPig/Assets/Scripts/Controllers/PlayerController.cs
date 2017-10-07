@@ -199,9 +199,7 @@ public class PlayerController : MonoBehaviour {
      */
     void OnCollisionExit(Collision collision)
     {
-        var gameObject = collision.gameObject;
-        TagList collisionTags = gameObject.GetComponent<TagList>();
-        if (collisionTags != null && collisionTags.ContainsTag(Constants.TAG_BOX))
+        if (TagList.ContainsTag(collision.gameObject, Constants.TAG_BOX))
         {
             isPushingBoxInX = false;
             isPushingBoxInZ = false;
