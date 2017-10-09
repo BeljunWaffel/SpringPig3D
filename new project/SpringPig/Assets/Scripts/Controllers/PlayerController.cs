@@ -104,7 +104,6 @@ public class PlayerController : MonoBehaviour
         if (!IsGrounded() && currentHeight > maxHeight)
         {
             maxHeight = currentHeight;
-            Debug.Log("MaxHeight:" + maxHeight);
         }
 
         // If player was in the air before but isn't anymore, calculate how much energy was gained.
@@ -199,7 +198,7 @@ public class PlayerController : MonoBehaviour
     
     private bool IsGrounded()
     {
-        var isGrounded = Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1f);
+        var isGrounded = Physics.Raycast(transform.position, Vector3.down, distToGround + 0.1f);
         return isGrounded;
     }
 

@@ -1,35 +1,47 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 class PlatformController : MonoBehaviour
 {
-    public Vector3 _endPosition;
-    public int _secondsToReachTarget;
+    public List<Vector3> _positions;
+    public List<int> _secondsToReachTarget;
 
     private Vector3 startPosition;
+    private Vector3 endPosition;
+    private int endPositionIndex;
     private Rigidbody platform;
-    private bool isMovingTowardsEnd;
     private float time;
 
     void Start()
     {
+        if (_positions.Count != _secondsToReachTarget.Count)
+        {
+            throw new ArgumentException("#items in lists should be equal");
+        }
+
         platform = GetComponent<Rigidbody>();
-        startPosition = platform.position;
-        isMovingTowardsEnd = true;
+        startPosition = _positions[endPositionIndex];
+        platform.position = startPosition;
+        endPositionIndex = 1;
+        endPosition = _positions[endPositionIndex];
         time = 0;
     }
 
     private void Update()
     {
-        time += Time.deltaTime / _secondsToReachTarget;
-        transform.position = Vector3.Lerp(startPosition, _endPosition, time);
+        time += Time.deltaTime / _secondsToReachTarget[endPositionIndex];
+        transform.position = Vector3.Lerp(startPosition, endPosition, time);
 
-        if (platform.position == _endPosition)
+        if (platform.position == endPosition)
         {
-            // Switch start and end position and reset time.
-            var endPos = _endPosition;
-            _endPosition = startPosition;
-            startPosition = endPos;
-            isMovingTowardsEnd = !isMovingTowardsEnd;
+            startPosition = endPosition;
+            endPositionIndex++;
+            if (endPositionIndex > _positions.Count - 1)
+            {
+                endPositionIndex = 0;
+            }
+            endPosition = _positions[endPositionIndex];
             time = 0;
         }
     }
