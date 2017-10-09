@@ -10,7 +10,6 @@ namespace Assets.Scripts.Utils
         /// </summary>
         /// <param name="coordinates">x=col,y=startHeight,z=row grid coordinates</param>
         /// <param name="objectDimensions">width, height, length of object</param>
-        /// <returns></returns>
         public static Vector3 GetLocalPositionFromGridCoordinates(Vector3 coordinates, Vector3 objectDimensions)
         {
             return new Vector3(.5f + coordinates.x,

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
-public class PlayerController : MonoBehaviour {
-
+public class PlayerController : MonoBehaviour
+{
     public float _movementMultiplier;
     public int _energy;
     public int _gravityMagnitude;
@@ -162,10 +162,6 @@ public class PlayerController : MonoBehaviour {
             // Horizontal movement
             Vector3 movement;
             var multiplier = _movementMultiplier;
-            //if (!IsGrounded())
-            //{
-            //    multiplier /= 2;
-            //}
 
             movement = new Vector3(moveHorizontal * multiplier,
                                    player.velocity.y,
