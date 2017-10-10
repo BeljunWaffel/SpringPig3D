@@ -9,9 +9,12 @@ class PlatformController : MonoBehaviour
 
     private Vector3 startPosition;
     private Vector3 endPosition;
+    private int startPositionIndex;
     private int endPositionIndex;
     private Rigidbody platform;
     private float time;
+
+    private float debugTimeStart;
 
     void Start()
     {
@@ -21,28 +24,41 @@ class PlatformController : MonoBehaviour
         }
 
         platform = GetComponent<Rigidbody>();
-        startPosition = _positions[endPositionIndex];
-        platform.position = startPosition;
+
+        startPositionIndex = 0;
         endPositionIndex = 1;
-        endPosition = _positions[endPositionIndex];
+
+        startPosition = _positions[0];
+        platform.position = startPosition;
+
+        endPosition = _positions[1];
         time = 0;
     }
 
     private void Update()
     {
-        time += Time.deltaTime / _secondsToReachTarget[endPositionIndex];
+        time += Time.deltaTime / _secondsToReachTarget[startPositionIndex];
         transform.position = Vector3.Lerp(startPosition, endPosition, time);
 
         if (platform.position == endPosition)
         {
-            startPosition = endPosition;
+            Debug.Log("time:" + Mathf.RoundToInt(Time.time - debugTimeStart) + "\nposition:" + transform.position);
+            startPositionIndex++;
             endPositionIndex++;
+
             if (endPositionIndex > _positions.Count - 1)
             {
                 endPositionIndex = 0;
             }
+            if (startPositionIndex > _positions.Count - 1)
+            {
+                startPositionIndex = 0;
+            }
+
+            startPosition = endPosition;
             endPosition = _positions[endPositionIndex];
             time = 0;
+            debugTimeStart = Time.time;
         }
     }
 

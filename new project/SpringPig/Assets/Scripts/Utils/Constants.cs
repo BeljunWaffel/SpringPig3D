@@ -35,5 +35,6 @@ public class Constants
     public static string TOGGLE_BUTTON_PREFIX = "button.T.";
     public static string NO_TOGGLE_BUTTON_PREFIX = "button.NT.";
     public static string BOX_PREFIX = "box.";
+    public static string PLATFORM_PREFIX = "plat.";
 
 }

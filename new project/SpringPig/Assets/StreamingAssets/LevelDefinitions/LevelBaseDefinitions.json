@@ -18,3 +18,7 @@
 	"Key": "button.<T/NT>.<Y>",
 	"Value": "Button That Opens Gate Y. T = Toggle, NT = No Toggle"
 },
+{
+	"Key": "plat.<X>.<Y>.<Z>.<A>",
+	"Value": "Platform #X, position #Y, Height Z. Time to reach next position <A>. Position index starts at 0."
+},

@@ -148,12 +148,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c05bb0be746e6c042b75b912fc4df260, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _levelName: TestLevel.json
+  _levelName: TestLevelWithPlatform.json
   _gatePrefab: {fileID: 4714507924153514, guid: 08d53291882792843889474d3ddbf68e,
     type: 2}
   _buttonPrefab: {fileID: 4235295429820920, guid: 65b16d05b2f492643819f97a4a01336a,
     type: 2}
   _boxPrefab: {fileID: 4775193322776776, guid: 10d6ec63015ab8548b57385ab033c1ab, type: 2}
+  _platformPrefab: {fileID: 4370620539340018, guid: bac5a7f44ddf30c4ab3f627c3d854cee,
+    type: 2}
   _plane: {fileID: 1900100056}
   _player: {fileID: 1825784546}
   noFrictionMaterial: {fileID: 13400000, guid: 51156876978881041b92a2c1ce72f0b0, type: 2}
