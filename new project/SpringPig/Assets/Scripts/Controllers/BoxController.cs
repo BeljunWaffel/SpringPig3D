@@ -14,7 +14,10 @@ public class BoxController : MonoBehaviour
         if (IsCollidingWithPlayer(collision))
         {
             var player = collision.gameObject.GetComponent<PlayerController>();
-            PushBox(player);
+            if (IsPlayerAtSameLevelAsBox(player))
+            {
+                PushBox(player);
+            }
         }
     }
 
@@ -23,7 +26,10 @@ public class BoxController : MonoBehaviour
         if (IsCollidingWithPlayer(collision))
         {
             var player = collision.gameObject.GetComponent<PlayerController>();
-            PushBox(player);
+            if (IsPlayerAtSameLevelAsBox(player))
+            {
+                PushBox(player);
+            }
         }
     }
 
@@ -38,6 +44,21 @@ public class BoxController : MonoBehaviour
     private bool IsCollidingWithPlayer(Collision collision)
     {
         return TagList.ContainsTag(collision.gameObject, Constants.TAG_PLAYER);
+    }
+
+    private bool IsPlayerAtSameLevelAsBox(PlayerController playerObject)
+    {
+        var player = playerObject.GetComponent<Rigidbody>();
+        var positionDiff = player.transform.position - box.transform.position;
+        if (positionDiff.y > 0.5)
+        {
+            // Return false if the player is on top of the box
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 
     private void PushBox(PlayerController playerObject)
