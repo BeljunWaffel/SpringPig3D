@@ -237,4 +237,14 @@ public class PlayerController : MonoBehaviour
                playerVelocity :
                MathUtils.IsPositive(playerVelocity) * Constants.BOX_SPEED;
     }
+
+    /**
+     * 
+     * Called when the Player is killed by Lava, etc.
+     * 
+     **/ 
+    public void Kill()
+    {
+        gameObject.transform.SetPositionAndRotation(new Vector3(0, 0.5F, 0), new Quaternion(0,0,0,0));
+    }
 }
