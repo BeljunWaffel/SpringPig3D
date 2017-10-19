@@ -16,9 +16,11 @@ public class LavaController : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
+        // Targets with the "Burnable" tag must implement Burn.
+        // Currently only works with the Player
         if (TagList.ContainsTag(other.gameObject, Constants.TAG_BURNABLE))
         {
-            other.GetComponent<PlayerController>().Kill();
+            other.GetComponent<PlayerController>().Burn();
         }
     }
 }

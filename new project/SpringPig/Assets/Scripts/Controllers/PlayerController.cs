@@ -240,10 +240,10 @@ public class PlayerController : MonoBehaviour
 
     /**
      * 
-     * Called when the Player is killed by Lava, etc.
+     * Called when the Player is burned by Lava
      * 
      **/ 
-    public void Kill()
+    public void Burn()
     {
         gameObject.transform.SetPositionAndRotation(new Vector3(0, 0.5F, 0), new Quaternion(0,0,0,0));
     }
