@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class FreeLookCameraController : MonoBehaviour
 {
@@ -133,8 +134,23 @@ public class FreeLookCameraController : MonoBehaviour
                 var tanOfAngle = Mathf.Tan(theta);
                 var z = tanOfAngle != 0 ? -1 * y / Mathf.Tan(theta) : 0;
 
-                _camera.localPosition = new Vector3(_camera.localPosition.x, _camera.localPosition.y + y, _camera.localPosition.z + z);
+                var cameraEndPos = new Vector3(_camera.localPosition.x, _camera.localPosition.y + y, _camera.localPosition.z + z);
+
+                // Makes the zooming transition a bit smoother by lerping the positions.
+                StartCoroutine(MoveLocalPositionTo(_camera, cameraEndPos, .075f));
             }
+        }
+    }
+
+    public IEnumerator MoveLocalPositionTo(Transform transform, Vector3 position, float timeToMove)
+    {
+        var currentPos = transform.localPosition;
+        var t = 0f;
+        while (t < 1)
+        {
+            t += Time.deltaTime / timeToMove;
+            transform.localPosition = Vector3.Lerp(currentPos, position, t);
+            yield return null;
         }
     }
 }

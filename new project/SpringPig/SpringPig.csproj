@@ -85,7 +85,6 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Controllers\BoxController.cs" />
     <Compile Include="Assets\Scripts\Controllers\ButtonController.cs" />
-    <Compile Include="Assets\Scripts\Controllers\CameraController.cs" />
     <Compile Include="Assets\Scripts\Controllers\CameraControllers\FreeLookCameraController.cs" />
     <Compile Include="Assets\Scripts\Controllers\GateController.cs" />
     <Compile Include="Assets\Scripts\Controllers\LavaController.cs" />
