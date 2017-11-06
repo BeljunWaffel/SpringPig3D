@@ -5,11 +5,12 @@ public class PlayerController : MonoBehaviour
     public float _movementMultiplier;
     public int _energy;
     public int _gravityMagnitude;
+    public Transform _cameraRig;
 
     private Rigidbody player;
     private float distToGround;
     private bool isMovingHorizontally = false;
-
+    
     // Needed to calculate energy
     private bool wasGrounded = false;
     private bool wasInAirBecauseOfMiniJump = false;
@@ -38,6 +39,8 @@ public class PlayerController : MonoBehaviour
     // Applied before physics
     void FixedUpdate()
     {
+        transform.forward = _cameraRig.forward;
+
         PerformHorizontalMovement();
         PerformVerticalMovement();
     }
@@ -160,11 +163,17 @@ public class PlayerController : MonoBehaviour
         {
             // Horizontal movement
             Vector3 movement;
-            var multiplier = _movementMultiplier;
+            var multiplier = _movementMultiplier;           
+
+            //var playerdirection = moveVertical * cameraDirection + moveHorizontal * _camera.right;
+            var playerdirection = new Vector3(1, 1, 1);
 
             movement = new Vector3(moveHorizontal * multiplier,
                                    player.velocity.y,
                                    moveVertical * multiplier);
+
+            // Rotate movement so that it faces the same direction as the player.
+            movement = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f) * movement;
 
             if (isPushingBoxInX && movement.x != 0)
             {
