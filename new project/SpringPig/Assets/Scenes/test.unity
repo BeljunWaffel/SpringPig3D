@@ -1290,6 +1290,7 @@ MonoBehaviour:
   _movementMultiplier: 5
   _energy: 2
   _gravityMagnitude: 18
+  _cameraRig: {fileID: 1961286426}
   IsDebug: 0
 --- !u!54 &1249101819
 Rigidbody:

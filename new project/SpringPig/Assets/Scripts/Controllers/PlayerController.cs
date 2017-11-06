@@ -164,10 +164,7 @@ public class PlayerController : MonoBehaviour
             // Horizontal movement
             Vector3 movement;
             var multiplier = _movementMultiplier;           
-
-            //var playerdirection = moveVertical * cameraDirection + moveHorizontal * _camera.right;
-            var playerdirection = new Vector3(1, 1, 1);
-
+            
             movement = new Vector3(moveHorizontal * multiplier,
                                    player.velocity.y,
                                    moveVertical * multiplier);
