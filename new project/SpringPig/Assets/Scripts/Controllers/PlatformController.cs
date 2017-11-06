@@ -14,8 +14,6 @@ class PlatformController : MonoBehaviour
     private Rigidbody platform;
     private float time;
 
-    private float debugTimeStart;
-
     void Start()
     {
         if (_positions.Count != _secondsToReachTarget.Count)
@@ -42,7 +40,6 @@ class PlatformController : MonoBehaviour
 
         if (platform.position == endPosition)
         {
-            Debug.Log("time:" + Mathf.RoundToInt(Time.time - debugTimeStart) + "\nposition:" + transform.position);
             startPositionIndex++;
             endPositionIndex++;
 
@@ -58,7 +55,6 @@ class PlatformController : MonoBehaviour
             startPosition = endPosition;
             endPosition = _positions[endPositionIndex];
             time = 0;
-            debugTimeStart = Time.time;
         }
     }
 
