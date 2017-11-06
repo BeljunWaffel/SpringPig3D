@@ -223,6 +223,7 @@ MonoBehaviour:
   _movementMultiplier: 5
   _energy: 2
   _gravityMagnitude: 18
+  _cameraRig: {fileID: 4289669738421090, guid: 0ee75919de1700b4aaa1027e8f53434c, type: 2}
   IsDebug: 0
 --- !u!124 &124972687606960208
 Behaviour:
