@@ -2,23 +2,23 @@
 
 public class ButtonController : MonoBehaviour {
 
-    public bool _toggleable;
+    [SerializeField] public bool Toggleable;
 
-    private bool isPressed = false;
-    private Rigidbody button;
-    private int numberofPressingObjects;
+    private bool _isPressed = false;
+    private Rigidbody _button;
+    private int _numberofPressingObjects;
 
 	void Start ()
     {
-        button = GetComponent<Rigidbody>();
-        numberofPressingObjects = 0;
+        _button = GetComponent<Rigidbody>();
+        _numberofPressingObjects = 0;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (TagList.ContainsTag(other.gameObject, Constants.TAG_BUTTON_PUSHER))
         {
-            numberofPressingObjects++;
+            _numberofPressingObjects++;
             PushButton();
         }
     }
@@ -27,33 +27,33 @@ public class ButtonController : MonoBehaviour {
     {
         if (TagList.ContainsTag(other.gameObject, Constants.TAG_BUTTON_PUSHER))
         {
-            numberofPressingObjects--;
+            _numberofPressingObjects--;
             UnpushButton();
         }
     }
 
     public bool IsPressed()
     {
-        return isPressed;
+        return _isPressed;
     }
 
     private void PushButton()
     {
-        if (!isPressed)
+        if (!_isPressed)
         {
-            button.gameObject.transform.localScale -= new Vector3(0, 0.125F, 0);
-            isPressed = true;
+            _button.gameObject.transform.localScale -= new Vector3(0, 0.125F, 0);
+            _isPressed = true;
         }
     }
 
     private void UnpushButton()
     {
-        if (_toggleable && 
-            isPressed && 
-            numberofPressingObjects == 0)
+        if (Toggleable && 
+            _isPressed && 
+            _numberofPressingObjects == 0)
         {
-            button.gameObject.transform.localScale += new Vector3(0, 0.125F, 0);
-            isPressed = false;
+            _button.gameObject.transform.localScale += new Vector3(0, 0.125F, 0);
+            _isPressed = false;
         }
     }
 }

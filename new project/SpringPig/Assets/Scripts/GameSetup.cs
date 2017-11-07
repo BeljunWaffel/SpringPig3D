@@ -5,42 +5,42 @@ using UnityEngine;
 
 public class GameSetup : MonoBehaviour
 {
-    public string _levelName;
-    public Transform _gatePrefab;
-    public Transform _buttonPrefab;
-    public Transform _boxPrefab;
-    public Transform _platformPrefab;
-    public GameObject _plane;
-    public GameObject _player;
-    public PhysicMaterial noFrictionMaterial;
+    [SerializeField] private string _levelName;
+    [SerializeField] private Transform _gatePrefab;
+    [SerializeField] private Transform _buttonPrefab;
+    [SerializeField] private Transform _boxPrefab;
+    [SerializeField] private Transform _platformPrefab;
+    [SerializeField] private GameObject _plane;
+    [SerializeField] private GameObject _player;
+    [SerializeField] private PhysicMaterial noFrictionMaterial;
 
-    private int planeZScale;
-    private int planeXScale;
+    private int _planeZScale;
+    private int _planeXScale;
 
-    private Dictionary<string, int> itemCounts;
-    private List<VerticalDefinitions> verticalDefinitionsList;
+    private Dictionary<string, int> _itemCounts;
+    private List<VerticalDefinitions> _verticalDefinitionsList;
 
-    private Dictionary<int, GameObject> buttons; // Maps the button number to actual button.
-    private Dictionary<int, List<Transform>> gates; // Maps the gate button to the gates opened by that button.
-    private Dictionary<int, Transform> platforms; // Dictionary of platforms on this level. Index = platform #.
-    private Dictionary<int, List<Vector3>> platformPositions; // Mapping of platforms to their positions.
-    private Dictionary<int, List<int>> platformMoveTimes; // Mapping of platforms to their move times.
+    private Dictionary<int, GameObject> _buttons; // Maps the button number to actual button.
+    private Dictionary<int, List<Transform>> _gates; // Maps the gate button to the gates opened by that button.
+    private Dictionary<int, Transform> _platforms; // Dictionary of platforms on this level. Index = platform #.
+    private Dictionary<int, List<Vector3>> _platformPositions; // Mapping of platforms to their positions.
+    private Dictionary<int, List<int>> _platformMoveTimes; // Mapping of platforms to their move times.
 
     // Containers
-    private GameObject wallsContainer;
-    private GameObject interactableObjectsContainer;
-    private GameObject nonInteractableObjectsContainer;
+    private GameObject _wallsContainer;
+    private GameObject _interactableObjectsContainer;
+    private GameObject _nonInteractableObjectsContainer;
 
     private Dictionary<int, GameObject> Buttons
     {
         get
         {
-            if (buttons == null)
+            if (_buttons == null)
             {
-                buttons = new Dictionary<int, GameObject>();
+                _buttons = new Dictionary<int, GameObject>();
             }
 
-            return buttons;
+            return _buttons;
         }
 
         set
@@ -53,12 +53,12 @@ public class GameSetup : MonoBehaviour
     {
         get
         {
-            if (gates == null)
+            if (_gates == null)
             {
-                gates = new Dictionary<int, List<Transform>>();
+                _gates = new Dictionary<int, List<Transform>>();
             }
 
-            return gates;
+            return _gates;
         }
 
         set
@@ -71,12 +71,12 @@ public class GameSetup : MonoBehaviour
     {
         get
         {
-            if (platforms == null)
+            if (_platforms == null)
             {
-                platforms = new Dictionary<int, Transform>();
+                _platforms = new Dictionary<int, Transform>();
             }
 
-            return platforms;
+            return _platforms;
         }
 
         set
@@ -89,17 +89,17 @@ public class GameSetup : MonoBehaviour
     {
         get
         {
-            if (platformPositions == null)
+            if (_platformPositions == null)
             {
-                platformPositions = new Dictionary<int, List<Vector3>>();
+                _platformPositions = new Dictionary<int, List<Vector3>>();
             }
 
-            return platformPositions;
+            return _platformPositions;
         }
 
         set
         {
-            platformPositions = value;
+            _platformPositions = value;
         }
     }
 
@@ -107,17 +107,17 @@ public class GameSetup : MonoBehaviour
     {
         get
         {
-            if (platformMoveTimes == null)
+            if (_platformMoveTimes == null)
             {
-                platformMoveTimes = new Dictionary<int, List<int>>();
+                _platformMoveTimes = new Dictionary<int, List<int>>();
             }
 
-            return platformMoveTimes;
+            return _platformMoveTimes;
         }
 
         set
         {
-            platformMoveTimes = value;
+            _platformMoveTimes = value;
         }
     }
 
@@ -128,7 +128,7 @@ public class GameSetup : MonoBehaviour
             return;
         }
 
-        itemCounts = new Dictionary<string, int>();
+        _itemCounts = new Dictionary<string, int>();
 
         LevelDefinition levelDefinition;
         LevelParser.ParseLevelJson(_levelName, out levelDefinition);
@@ -140,12 +140,12 @@ public class GameSetup : MonoBehaviour
         }
         else
         {
-            planeXScale = levelDefinition.X_Scale;
-            planeZScale = levelDefinition.Z_Scale;
+            _planeXScale = levelDefinition.X_Scale;
+            _planeZScale = levelDefinition.Z_Scale;
 
             ScalePlane();
             CreateOuterWalls();
-            verticalDefinitionsList = levelDefinition.VerticalDefinitions;
+            _verticalDefinitionsList = levelDefinition.VerticalDefinitions;
             SetupLevelContents(levelDefinition);
             
             var playerCoordinates = new Vector3(levelDefinition.Player.X, levelDefinition.Player.Y, levelDefinition.Player.Z);
@@ -158,35 +158,35 @@ public class GameSetup : MonoBehaviour
     private void ScalePlane()
     {
         // Default plane dim is 10x10.
-        _plane.transform.localScale = new Vector3(planeXScale / 10.0f, 1f, planeZScale / 10.0f);
+        _plane.transform.localScale = new Vector3(_planeXScale / 10.0f, 1f, _planeZScale / 10.0f);
 
         // Top left corner is 0,0
-        _plane.transform.position = new Vector3(planeXScale / 2.0f, 0f, -planeZScale / 2.0f);
+        _plane.transform.position = new Vector3(_planeXScale / 2.0f, 0f, -_planeZScale / 2.0f);
     }
 
     private void CreateOuterWalls()
     {
-        wallsContainer = new GameObject("Walls");
-        var westWall = CreateWall(planeZScale, "West Wall", wallsContainer);
-        var eastWall = CreateWall(planeZScale, "East Wall", wallsContainer);
-        var northWall = CreateWall(planeXScale, "North Wall", wallsContainer);
-        var southWall = CreateWall(planeXScale, "South Wall", wallsContainer);
+        _wallsContainer = new GameObject("Walls");
+        var westWall = CreateWall(_planeZScale, "West Wall", _wallsContainer);
+        var eastWall = CreateWall(_planeZScale, "East Wall", _wallsContainer);
+        var northWall = CreateWall(_planeXScale, "North Wall", _wallsContainer);
+        var southWall = CreateWall(_planeXScale, "South Wall", _wallsContainer);
 
         var widthOffset = Constants.DEFAULT_WALL_WIDTH / 2;
 
-        westWall.transform.position = new Vector3(-1.0f * widthOffset, 0f, -planeZScale / 2.0f);
-        eastWall.transform.position = new Vector3(planeXScale + widthOffset, 0f, -planeZScale / 2.0f);
+        westWall.transform.position = new Vector3(-1.0f * widthOffset, 0f, -_planeZScale / 2.0f);
+        eastWall.transform.position = new Vector3(_planeXScale + widthOffset, 0f, -_planeZScale / 2.0f);
 
-        northWall.transform.position = new Vector3(planeXScale / 2.0f, 0f, widthOffset);
+        northWall.transform.position = new Vector3(_planeXScale / 2.0f, 0f, widthOffset);
         northWall.transform.Rotate(new Vector3(0f, 90f, 0f));
-        southWall.transform.position = new Vector3(planeXScale / 2.0f, 0f, -1.0f * planeZScale - widthOffset);
+        southWall.transform.position = new Vector3(_planeXScale / 2.0f, 0f, -1.0f * _planeZScale - widthOffset);
         southWall.transform.Rotate(new Vector3(0f, 90f, 0f));
 
         // Create invisible walls so you can't fall off the sides
-        var invisWestWall = CreateWall(planeZScale, "Invisible West Wall", wallsContainer, visible: false);
-        var invisEastWall = CreateWall(planeZScale, "Invisible East Wall", wallsContainer, visible: false);
-        var invisNorthWall = CreateWall(planeXScale, "Invisible North Wall", wallsContainer, visible: false);
-        var invisSouthWall = CreateWall(planeXScale, "Invisible South Wall", wallsContainer, visible: false);
+        var invisWestWall = CreateWall(_planeZScale, "Invisible West Wall", _wallsContainer, visible: false);
+        var invisEastWall = CreateWall(_planeZScale, "Invisible East Wall", _wallsContainer, visible: false);
+        var invisNorthWall = CreateWall(_planeXScale, "Invisible North Wall", _wallsContainer, visible: false);
+        var invisSouthWall = CreateWall(_planeXScale, "Invisible South Wall", _wallsContainer, visible: false);
 
         // Overlay the walls
         invisWestWall.transform.position = westWall.transform.position;
@@ -208,14 +208,14 @@ public class GameSetup : MonoBehaviour
     private void SetupLevelContents(LevelDefinition levelDefinition)
     {
         // Ensure # of items in levelBase is equal to specified length/width
-        if (planeXScale * planeZScale != levelDefinition.LevelBase.Count)
+        if (_planeXScale * _planeZScale != levelDefinition.LevelBase.Count)
         {
             throw new ArgumentNullException("Invalid JSON. LevelBase size does not match length/width arguments.");
         }
 
         // Set up containers
-        interactableObjectsContainer = new GameObject("InteractableObjects");
-        nonInteractableObjectsContainer = new GameObject("NonInteractableObjects");
+        _interactableObjectsContainer = new GameObject("InteractableObjects");
+        _nonInteractableObjectsContainer = new GameObject("NonInteractableObjects");
 
         for (int i = 0; i < levelDefinition.LevelBase.Count; i++)
         {
@@ -225,8 +225,8 @@ public class GameSetup : MonoBehaviour
                 continue;
             }
 
-            var row = i / planeXScale;
-            var col = i % planeXScale;
+            var row = i / _planeXScale;
+            var col = i % _planeXScale;
 
             VerticalDefinition itemVerticalDefinition = new VerticalDefinition()
             {
@@ -246,13 +246,13 @@ public class GameSetup : MonoBehaviour
             for (int i = 0; i < PlatformPositions[key].Count; i++)
             {
                 var position = PlatformPositions[key][i];
-                controller._positions.Add(position);
+                controller.Positions.Add(position);
             }
 
             for (int i = 0; i < PlatformMoveTimes[key].Count; i++)
             {
                 var moveTime = PlatformMoveTimes[key][i];
-                controller._secondsToReachTarget.Add(moveTime);
+                controller.SecondsToReachTarget.Add(moveTime);
             }
         }
     }
@@ -323,7 +323,7 @@ public class GameSetup : MonoBehaviour
 
     private List<VerticalDefinition> GetVerticalDefinitionList(string id)
     {
-        foreach (var verticalDefinitions in verticalDefinitionsList)
+        foreach (var verticalDefinitions in _verticalDefinitionsList)
         {
             if (id == verticalDefinitions.Id)
             {
@@ -371,7 +371,7 @@ public class GameSetup : MonoBehaviour
         var cubeDimensions = new Vector3(1f, height, 1f);
         cube.transform.position = TransformUtils.GetLocalPositionFromGridCoordinates(cubeCoordinates, cubeDimensions);
 
-        cube.transform.parent = nonInteractableObjectsContainer.transform;
+        cube.transform.parent = _nonInteractableObjectsContainer.transform;
         cube.name = CreateUniqueItemName("Cube_" + height);
 
         return cube;
@@ -379,7 +379,7 @@ public class GameSetup : MonoBehaviour
 
     private Transform CreateGate(float height, int col, int row, int startHeight, int buttonNumber)
     {
-        var gate = Instantiate(_gatePrefab, interactableObjectsContainer.transform);
+        var gate = Instantiate(_gatePrefab, _interactableObjectsContainer.transform);
         gate.GetComponent<Collider>().material = noFrictionMaterial;
 
         gate.localScale = new Vector3(1f, height, 1f);
@@ -396,7 +396,7 @@ public class GameSetup : MonoBehaviour
             Buttons[buttonNumber] = button;
         }
 
-        gate.GetComponent<GateController>()._button = button;
+        gate.GetComponent<GateController>().Button = button;
 
         List<Transform> gatesList;
         if (!Gates.TryGetValue(buttonNumber, out gatesList))
@@ -417,21 +417,21 @@ public class GameSetup : MonoBehaviour
     private Transform CreateButton(int col, int row, int startHeight, int buttonNumber, bool isToggle)
     {
         // Button dimensions are the same as the prefab, so I don't change them here.
-        var button = Instantiate(_buttonPrefab, interactableObjectsContainer.transform);
+        var button = Instantiate(_buttonPrefab, _interactableObjectsContainer.transform);
         button.GetComponent<Collider>().material = noFrictionMaterial;
 
         var buttonCoordinates = new Vector3(col, startHeight, row);
         var buttonDimensions = new Vector3(.5f, .25f, .5f);
         button.position = TransformUtils.GetLocalPositionFromGridCoordinates(buttonCoordinates, buttonDimensions);
         button.name = CreateUniqueItemName("Button_" + (isToggle ? "T_" : "NT_") + buttonNumber);
-        button.GetComponent<ButtonController>()._toggleable = isToggle;
+        button.GetComponent<ButtonController>().Toggleable = isToggle;
         
         // If gates already exist for this button, make sure to assign this button to them.
         List<Transform> gatesList;
         if (Gates.TryGetValue(buttonNumber, out gatesList)) {
             foreach (var gate in gatesList)
             {
-                gate.GetComponent<GateController>()._button = button.gameObject;
+                gate.GetComponent<GateController>().Button = button.gameObject;
             }
         }
 
@@ -441,7 +441,7 @@ public class GameSetup : MonoBehaviour
 
     private Transform CreateBox(float height, int col, int row, int startHeight)
     {
-        var box = Instantiate(_boxPrefab, interactableObjectsContainer.transform);
+        var box = Instantiate(_boxPrefab, _interactableObjectsContainer.transform);
         box.GetComponent<Collider>().material = noFrictionMaterial;
 
         box.localScale = new Vector3(1f, height, 1f);
@@ -460,13 +460,13 @@ public class GameSetup : MonoBehaviour
         Transform platform;
         if (!Platforms.TryGetValue(platformNumber, out platform))
         {
-            platform = Instantiate(_platformPrefab, nonInteractableObjectsContainer.transform);
+            platform = Instantiate(_platformPrefab, _nonInteractableObjectsContainer.transform);
             platform.GetComponent<Collider>().material = noFrictionMaterial;
             platform.name = CreateUniqueItemName("Platform");
 
             var controller = platform.GetComponent<PlatformController>();
-            controller._positions = new List<Vector3>();
-            controller._secondsToReachTarget = new List<int>();
+            controller.Positions = new List<Vector3>();
+            controller.SecondsToReachTarget = new List<int>();
             Platforms[platformNumber] = platform;
         }
 
@@ -514,12 +514,12 @@ public class GameSetup : MonoBehaviour
 
     private string CreateUniqueItemName(string key)
     {
-        if (!itemCounts.ContainsKey(key))
+        if (!_itemCounts.ContainsKey(key))
         {
-            itemCounts[key] = 0;
+            _itemCounts[key] = 0;
         }
-        itemCounts[key]++;
-        int itemNumber = itemCounts[key];
+        _itemCounts[key]++;
+        int itemNumber = _itemCounts[key];
         var result = key + " (" + itemNumber + ")";
 
         return result;

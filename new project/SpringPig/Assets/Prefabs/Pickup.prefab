@@ -109,7 +109,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e3b6a4911d3c314c80599a161aec497, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pickupEffect: 
+  _pickupEffect: Addition
+  _value: 2
 --- !u!135 &135985321371606674
 SphereCollider:
   m_ObjectHideFlags: 1

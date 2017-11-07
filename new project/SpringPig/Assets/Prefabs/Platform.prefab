@@ -121,6 +121,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad094143b0099474a9629e28f338e424, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _positions:
-  - {x: 0, y: 0, z: 0}
-  _secondsToReachTarget: 05000000
+  Positions: []
+  SecondsToReachTarget: 

@@ -2,19 +2,9 @@
 
 public class PickupController : MonoBehaviour {
 
-    public string _pickupEffect;
-    public int _value;
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
+    [SerializeField] private string _pickupEffect;
+    [SerializeField] private int _value;
+    
     private void OnTriggerEnter(Collider other)
     {
         if (TagList.ContainsTag(other.gameObject, Constants.TAG_PLAYER))
@@ -23,7 +13,7 @@ public class PickupController : MonoBehaviour {
             if (_pickupEffect.Equals(Constants.PICKUP_ADDITION))
             {
                 PlayerController playerController = other.gameObject.GetComponent<PlayerController>();
-                playerController._energy+= _value;
+                playerController.Energy += _value;
                 Destroy(this.gameObject);
             }
 

@@ -1,24 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GateController : MonoBehaviour {
 
-    public GameObject _button;
+    [SerializeField] public GameObject Button;
 
-    private ButtonController buttonController;
-    private bool isOpen = false;
+    private ButtonController _buttonController;
+    private bool _isOpen = false;
 
     // Use this for initialization
     void Start () {
-        buttonController = _button.GetComponent<ButtonController>();
+        _buttonController = Button.GetComponent<ButtonController>();
     }
 	
 	// Update is called once per frame
 	void Update () {
-        if (buttonController.IsPressed() && !isOpen)
+        if (_buttonController.IsPressed() && !_isOpen)
         {
-            isOpen = true;
+            _isOpen = true;
 
             // Set Graphics
             Color c = GetComponent<Renderer>().material.color;
@@ -28,9 +26,9 @@ public class GateController : MonoBehaviour {
             // Set Collisions
             GetComponent<BoxCollider>().enabled = false;
         }
-        else if (!buttonController.IsPressed() && isOpen)
+        else if (!_buttonController.IsPressed() && _isOpen)
         {
-            isOpen = false;
+            _isOpen = false;
 
             // Set Graphics
             Color c = GetComponent<Renderer>().material.color;
@@ -44,6 +42,6 @@ public class GateController : MonoBehaviour {
 
     public bool IsOpen()
     {
-        return isOpen;
+        return _isOpen;
     }
 }

@@ -4,57 +4,69 @@ using UnityEngine;
 
 class PlatformController : MonoBehaviour
 {
-    public List<Vector3> _positions;
-    public List<int> _secondsToReachTarget;
+    /// <summary>
+    /// Describes a moving platform. If a platform has 0 or 1 positions, it will stand still. Otherwise it will go from one point to another and loop.
+    /// </summary>
 
-    private Vector3 startPosition;
-    private Vector3 endPosition;
-    private int startPositionIndex;
-    private int endPositionIndex;
-    private Rigidbody platform;
-    private float time;
+    [SerializeField] public List<Vector3> Positions;
+    [SerializeField] public List<int> SecondsToReachTarget;
+
+    private Vector3 _startPosition;
+    private Vector3 _endPosition;
+    private int _startPositionIndex;
+    private int _endPositionIndex;
+    private Rigidbody _platform;
+    private float _time;
 
     void Start()
     {
-        if (_positions.Count != _secondsToReachTarget.Count)
+        if (Positions.Count != SecondsToReachTarget.Count)
         {
             throw new ArgumentException("#items in lists should be equal");
         }
 
-        platform = GetComponent<Rigidbody>();
+        if (Positions.Count <= 1)
+        {
+            return;
+        }
 
-        startPositionIndex = 0;
-        endPositionIndex = 1;
+        _platform = GetComponent<Rigidbody>();
 
-        startPosition = _positions[0];
-        platform.position = startPosition;
+        _startPositionIndex = 0;
+        _endPositionIndex = 1;
 
-        endPosition = _positions[1];
-        time = 0;
+        _startPosition = Positions[0];
+        _platform.position = _startPosition;
+        _endPosition = Positions.Count > 1 ? Positions[1] : _startPosition;
+
+        _time = 0;
     }
 
     private void Update()
     {
-        time += Time.deltaTime / _secondsToReachTarget[startPositionIndex];
-        transform.position = Vector3.Lerp(startPosition, endPosition, time);
-
-        if (platform.position == endPosition)
+        if (Positions.Count > 1)
         {
-            startPositionIndex++;
-            endPositionIndex++;
+            _time += Time.deltaTime / SecondsToReachTarget[_startPositionIndex];
+            transform.position = Vector3.Lerp(_startPosition, _endPosition, _time);
 
-            if (endPositionIndex > _positions.Count - 1)
+            if (_platform.position == _endPosition)
             {
-                endPositionIndex = 0;
-            }
-            if (startPositionIndex > _positions.Count - 1)
-            {
-                startPositionIndex = 0;
-            }
+                _startPositionIndex++;
+                _endPositionIndex++;
 
-            startPosition = endPosition;
-            endPosition = _positions[endPositionIndex];
-            time = 0;
+                if (_endPositionIndex > Positions.Count - 1)
+                {
+                    _endPositionIndex = 0;
+                }
+                if (_startPositionIndex > Positions.Count - 1)
+                {
+                    _startPositionIndex = 0;
+                }
+
+                _startPosition = _endPosition;
+                _endPosition = Positions[_endPositionIndex];
+                _time = 0;
+            }
         }
     }
 

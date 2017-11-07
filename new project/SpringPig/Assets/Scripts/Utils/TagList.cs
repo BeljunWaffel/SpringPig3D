@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class TagList : MonoBehaviour {
 
-    public List<string> _tags = new List<string>();
+    public List<string> Tags = new List<string>();
 
     public bool ContainsTag(string tag) {
-        return _tags.Contains(tag);
+        return Tags.Contains(tag);
     }
 
     public static bool ContainsTag(GameObject gameObject, string tag)
