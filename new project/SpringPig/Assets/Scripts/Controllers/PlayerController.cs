@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
     // Applied before physics
     void FixedUpdate()
     {
-        transform.forward = _cameraRig.forward;
+        //transform.forward = _cameraRig.forward;
 
         PerformHorizontalMovement();
         PerformVerticalMovement();
@@ -166,8 +166,12 @@ public class PlayerController : MonoBehaviour
                                    _player.velocity.y,
                                    moveVertical * multiplier);
 
-            // Rotate movement so that it faces the same direction as the player.
-            movement = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f) * movement;
+            // Rotate movement so that it faces the same direction as the camera.
+            movement = Quaternion.Euler(0f, _cameraRig.rotation.eulerAngles.y, 0f) * movement;
+
+            // Rotate player to face the direction of movement
+            //transform.localRotation = Quaternion.Slerp(transform.localRotation, _cameraRig.localRotation, 10 * Time.deltaTime);
+            transform.forward = Vector3.Lerp(transform.forward, movement, 10 * Time.deltaTime);
 
             if (_isPushingBoxInX && movement.x != 0)
             {
