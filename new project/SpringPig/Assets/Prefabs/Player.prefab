@@ -195,6 +195,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _player: {fileID: 1274049801690972}
+  offset: {x: 0, y: 0, z: 0}
 --- !u!114 &114370352228414584
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -206,9 +207,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d31808fbe192a74ca73c673b0eee193, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tags:
+  Tags:
   - Player
   - Button_Pusher
+  - Burnable
 --- !u!114 &114873553323113944
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -221,10 +223,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _movementMultiplier: 5
-  _energy: 2
+  Energy: 0
   _gravityMagnitude: 18
   _cameraRig: {fileID: 4289669738421090, guid: 0ee75919de1700b4aaa1027e8f53434c, type: 2}
-  IsDebug: 0
 --- !u!124 &124972687606960208
 Behaviour:
   m_ObjectHideFlags: 1

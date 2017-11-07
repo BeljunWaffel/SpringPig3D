@@ -122,7 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d31808fbe192a74ca73c673b0eee193, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tags:
+  Tags:
   - Box
   - Button_Pusher
 --- !u!114 &114344869911811000
