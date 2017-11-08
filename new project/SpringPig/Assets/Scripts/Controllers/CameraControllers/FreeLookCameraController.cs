@@ -10,6 +10,9 @@ public class FreeLookCameraController : MonoBehaviour
     // 			Camera
 
     [Range(0f, 10f)] [SerializeField] private float _turnSpeed = 1.5f;   // How fast the rig will rotate from user input.
+    [Range(0f, 1f)] [SerializeField] private float _panSpeed = .5f;   // How fast the rig will rotate from user input.
+    [SerializeField] private float doubleClickDelta = 0.35f;
+    [SerializeField] private float timeToWaitAfterReset = 1f;
     [SerializeField] private Transform _targetObject;    // The object to follow    
     [SerializeField] private bool _autoTargetPlayer = true;
     [SerializeField] private int _cameraMoveSpeed = 5;
@@ -21,16 +24,24 @@ public class FreeLookCameraController : MonoBehaviour
 
     // Pivot
     private Transform _pivot;
-    private Quaternion _pivotTargetRot;
+    private Quaternion _pivotStartingRotation;
+    private Vector3 _pivotStartingLocalPosition;
+    private Vector3 _pivotEulers;
 
     // Camera
     private Transform _camera;
-    private float _cameraStartY;
+    private Vector3 _cameraStartingLocalPosition;
 
+    // DoubleClick
+    private bool _doubleClicked = false;
+    private bool _hasClickedOnce = false;
+    private float _firstClickTime;
+    private float _doubleClickTime;
+
+    // Transform
     private float _lookAngle;
     private float _tiltAngle;
-    private Vector3 _pivotEulers;
-    private Quaternion _transformTargetRot;
+    private Quaternion _transformStartRotation;
 
     void Start()
     {
@@ -44,18 +55,44 @@ public class FreeLookCameraController : MonoBehaviour
             return;
         }
 
+        // Pivot
         _pivot = transform.GetChild(0);
-        _camera = GetComponentInChildren<Camera>().transform;
-        _cameraStartY = _camera.localPosition.y;
+        _pivotStartingLocalPosition = _pivot.localPosition;
+        _pivotStartingRotation = _pivot.localRotation;
         _pivotEulers = _pivot.rotation.eulerAngles;
-        _pivotTargetRot = _pivot.transform.localRotation;
-        _transformTargetRot = transform.localRotation;
+
+        // Camera
+        _camera = GetComponentInChildren<Camera>().transform;
+        _cameraStartingLocalPosition = _camera.localPosition;
+
+        // Transform
+        _transformStartRotation = transform.localRotation;
     }
 
     protected void Update()
     {
-        HandleRotationMovement();
-        HandleZoom();
+        if (!_doubleClicked)
+        {
+            _doubleClicked = HandleDoubleClick();
+            if (_doubleClicked)
+            {
+                _doubleClickTime = Time.time;
+            }
+            else
+            {
+                HandleRotationMovement();
+                HandleZoom();
+                HandlePan();
+            }
+        }
+        else
+        {
+            if (Time.time > _doubleClickTime + timeToWaitAfterReset)
+            {
+                _doubleClicked = false;
+                _doubleClickTime = 0;
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -100,16 +137,16 @@ public class FreeLookCameraController : MonoBehaviour
             _lookAngle += x * _turnSpeed;
 
             // Rotate the rig (the root object) around Y axis only:
-            _transformTargetRot = Quaternion.Euler(0f, _lookAngle, 0f);
+            var transformTargetRot = Quaternion.Euler(0f, _lookAngle, 0f);
 
             _tiltAngle -= y * _turnSpeed;
             _tiltAngle = Mathf.Clamp(_tiltAngle, -_tiltMin, _tiltMax);
 
             // Tilt input around X is applied to the pivot (the child of this object)
-            _pivotTargetRot = Quaternion.Euler(_tiltAngle, _pivotEulers.y, _pivotEulers.z);
+            var pivotTargetRot = Quaternion.Euler(_tiltAngle, _pivotEulers.y, _pivotEulers.z);
 
-            _pivot.localRotation = Quaternion.Slerp(_pivot.localRotation, _pivotTargetRot, 10 * Time.deltaTime);
-            transform.localRotation = Quaternion.Slerp(transform.localRotation, _transformTargetRot, 10 * Time.deltaTime);
+            _pivot.localRotation = Quaternion.Slerp(_pivot.localRotation, pivotTargetRot, 10 * Time.deltaTime);
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, transformTargetRot, 10 * Time.deltaTime);
         }
     }
 
@@ -126,7 +163,7 @@ public class FreeLookCameraController : MonoBehaviour
             wheel = wheel * _zoomSpeed;
             bool zoomIn = wheel > 0;
 
-            if ((!zoomIn && _camera.localPosition.y + wheel <= _cameraStartY + _zoomMaxAdditionalY) || (zoomIn && _camera.localPosition.y - wheel >= _zoomMinY))
+            if ((!zoomIn && _camera.localPosition.y + wheel <= _cameraStartingLocalPosition.y + _zoomMaxAdditionalY) || (zoomIn && _camera.localPosition.y - wheel >= _zoomMinY))
             {
                 // SOH CAH TOA (in this case TOA). To make an increase of 1 in y, we have to use the angle of the camera to determine the proportion that z gets.
                 var theta = Mathf.Deg2Rad * _camera.localEulerAngles.x;
@@ -142,6 +179,51 @@ public class FreeLookCameraController : MonoBehaviour
         }
     }
 
+    private void HandlePan()
+    {
+        if (Time.timeScale < float.Epsilon)
+        {
+            return;
+        }
+
+        if (Input.GetMouseButton(1))
+        {
+            var x = Input.GetAxis("Mouse X");
+            var y = Input.GetAxis("Mouse Y");
+
+            var panX = x * _panSpeed;
+            var panY = y * _panSpeed;
+
+            _pivot.localPosition = new Vector3(_pivot.localPosition.x - panX, _pivot.localPosition.y - panY, _pivot.localPosition.z);
+        }
+    }
+    
+    // Resets camera to original position
+    private bool HandleDoubleClick()
+    {
+        if (Time.time > _firstClickTime + doubleClickDelta)
+        {
+            _hasClickedOnce = false;
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (_hasClickedOnce && Time.time <= _firstClickTime + doubleClickDelta)
+            {
+                ResetRig();
+                _hasClickedOnce = false;
+                return true;
+            }
+            else
+            {
+                _hasClickedOnce = true;
+                _firstClickTime = Time.time;
+            }
+        }
+
+        return false;
+    }
+
     public IEnumerator MoveLocalPositionTo(Transform transform, Vector3 position, float timeToMove)
     {
         var currentPos = transform.localPosition;
@@ -152,5 +234,15 @@ public class FreeLookCameraController : MonoBehaviour
             transform.localPosition = Vector3.Lerp(currentPos, position, t);
             yield return null;
         }
+    }
+
+    private void ResetRig()
+    {
+        _pivot.localPosition = _pivotStartingLocalPosition;
+        _pivot.localRotation = _pivotStartingRotation;
+        _camera.localPosition = _cameraStartingLocalPosition;
+        transform.localRotation = _transformStartRotation;
+        _lookAngle = 0;
+        _tiltAngle = 0;
     }
 }

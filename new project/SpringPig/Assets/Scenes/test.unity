@@ -1908,6 +1908,16 @@ Prefab:
       propertyPath: _targetObject
       value: 
       objectReference: {fileID: 1249101823}
+    - target: {fileID: 114470720550075864, guid: 0ee75919de1700b4aaa1027e8f53434c,
+        type: 2}
+      propertyPath: _panSpeed
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114470720550075864, guid: 0ee75919de1700b4aaa1027e8f53434c,
+        type: 2}
+      propertyPath: timeToWaitAfterReset
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0ee75919de1700b4aaa1027e8f53434c, type: 2}
   m_IsPrefabParent: 0
