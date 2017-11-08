@@ -195,6 +195,10 @@ public class FreeLookCameraController : MonoBehaviour
             var panY = y * _panSpeed;
 
             _pivot.localPosition = new Vector3(_pivot.localPosition.x - panX, _pivot.localPosition.y - panY, _pivot.localPosition.z);
+            if (_pivot.position.y < 0)
+            {
+                _pivot.position = new Vector3(_pivot.position.x - panX, 0f, _pivot.position.z);
+            }
         }
     }
     
