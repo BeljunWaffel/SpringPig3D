@@ -170,8 +170,7 @@ public class PlayerController : MonoBehaviour
             movement = Quaternion.Euler(0f, _cameraRig.rotation.eulerAngles.y, 0f) * movement;
 
             // Rotate player to face the direction of movement
-            //transform.localRotation = Quaternion.Slerp(transform.localRotation, _cameraRig.localRotation, 10 * Time.deltaTime);
-            transform.forward = Vector3.Lerp(transform.forward, movement, 10 * Time.deltaTime);
+            transform.forward = Vector3.Lerp(transform.forward, new Vector3(movement.x, 0f, movement.z), 10 * Time.deltaTime);
 
             if (_isPushingBoxInX && movement.x != 0)
             {
