@@ -11,6 +11,10 @@
 	"Value": "Box of height X"
 },
 {
+	"Key": "lava.<X>",
+	"Value": "Lava of height X"
+},
+{
 	"Key": "gate.<X>.<Y>",
 	"Value": "Gate of Height X With Button Y"
 },

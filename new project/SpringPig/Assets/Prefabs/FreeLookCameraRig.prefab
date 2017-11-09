@@ -180,7 +180,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _turnSpeed: 3
-  _targetObject: {fileID: 4586435229490820, guid: c67e48ca5fc798742abebda270862807,
+  _panSpeed: 0.5
+  doubleClickDelta: 0.35
+  timeToWaitAfterReset: 1
+  _targetObject: {fileID: 4088937667300280, guid: 74b7eb2991ac7394fbe89f17cd24dfb4,
     type: 2}
   _autoTargetPlayer: 1
   _cameraMoveSpeed: 5

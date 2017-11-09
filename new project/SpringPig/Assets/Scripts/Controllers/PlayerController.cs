@@ -3,9 +3,9 @@
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float _movementMultiplier;
-    [SerializeField] public int Energy;
     [SerializeField] private int _gravityMagnitude;
-    [SerializeField] private Transform _cameraRig;
+    [SerializeField] public int Energy;
+    [SerializeField] public Transform CameraRig;
 
     private Rigidbody _player;
     private float _distToGround;
@@ -36,8 +36,6 @@ public class PlayerController : MonoBehaviour
     // Applied before physics
     void FixedUpdate()
     {
-        //transform.forward = _cameraRig.forward;
-
         PerformHorizontalMovement();
         PerformVerticalMovement();
     }
@@ -167,7 +165,7 @@ public class PlayerController : MonoBehaviour
                                    moveVertical * multiplier);
 
             // Rotate movement so that it faces the same direction as the camera.
-            movement = Quaternion.Euler(0f, _cameraRig.rotation.eulerAngles.y, 0f) * movement;
+            movement = Quaternion.Euler(0f, CameraRig.rotation.eulerAngles.y, 0f) * movement;
 
             // Rotate player to face the direction of movement
             transform.forward = Vector3.Lerp(transform.forward, new Vector3(movement.x, 0f, movement.z), 10 * Time.deltaTime);

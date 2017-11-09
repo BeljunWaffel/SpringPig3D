@@ -9,12 +9,12 @@ public class FreeLookCameraController : MonoBehaviour
     // 		Pivot
     // 			Camera
 
+    [SerializeField] public Transform TargetObject;    // The object to follow
+
     [Range(0f, 10f)] [SerializeField] private float _turnSpeed = 1.5f;   // How fast the rig will rotate from user input.
     [Range(0f, 1f)] [SerializeField] private float _panSpeed = .5f;   // How fast the rig will rotate from user input.
     [SerializeField] private float doubleClickDelta = 0.35f;
     [SerializeField] private float timeToWaitAfterReset = 1f;
-    [SerializeField] private Transform _targetObject;    // The object to follow    
-    [SerializeField] private bool _autoTargetPlayer = true;
     [SerializeField] private int _cameraMoveSpeed = 5;
     [SerializeField] private float _tiltMin = 45f;  // The min/max values of the x-axis rotation of the pivot. (Determines how far up/down the camera can look)
     [SerializeField] private float _tiltMax = 75f;
@@ -45,12 +45,7 @@ public class FreeLookCameraController : MonoBehaviour
 
     void Start()
     {
-        if (_autoTargetPlayer && _targetObject == null)
-        {
-            FindAndTargetPlayer();
-        }
-
-        if (!_targetObject)
+        if (!TargetObject)
         {
             return;
         }
@@ -97,28 +92,18 @@ public class FreeLookCameraController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_autoTargetPlayer && _targetObject == null)
-        {
-            FindAndTargetPlayer();
-        }
-
         FollowTarget(Time.deltaTime);
     }
-
-    private void FindAndTargetPlayer()
-    {
-        _targetObject = GameObject.FindGameObjectWithTag("Player").transform;
-    }
-
+    
     private void FollowTarget(float deltaTime)
     {
-        if (_targetObject == null)
+        if (TargetObject == null)
         {
             return;
         }
 
         // Move the rig towards target position.
-        transform.position = Vector3.Lerp(transform.position, _targetObject.position, deltaTime * _cameraMoveSpeed);
+        transform.position = Vector3.Lerp(transform.position, TargetObject.position, deltaTime * _cameraMoveSpeed);
     }
 
     private void HandleRotationMovement()

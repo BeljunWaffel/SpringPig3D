@@ -9,6 +9,7 @@ public class GameSetup : MonoBehaviour
     [SerializeField] private Transform _gatePrefab;
     [SerializeField] private Transform _buttonPrefab;
     [SerializeField] private Transform _boxPrefab;
+    [SerializeField] private Transform _lavaPrefab;
     [SerializeField] private Transform _platformPrefab;
     [SerializeField] private GameObject _plane;
     [SerializeField] private GameObject _player;
@@ -122,7 +123,7 @@ public class GameSetup : MonoBehaviour
     }
 
     // Use this for initialization
-    void Start () {
+    void Start() {
         if (_levelName == "")
         {
             return;
@@ -147,7 +148,7 @@ public class GameSetup : MonoBehaviour
             CreateOuterWalls();
             _verticalDefinitionsList = levelDefinition.VerticalDefinitions;
             SetupLevelContents(levelDefinition);
-            
+
             var playerCoordinates = new Vector3(levelDefinition.Player.X, levelDefinition.Player.Y, levelDefinition.Player.Z);
             // For some reason cylinders in unity start with a default height of 2, so player_height is scaled to half.
             var playerDimensions = new Vector3(Constants.PLAYER_WIDTH, 1f, Constants.PLAYER_LENGTH);
@@ -290,6 +291,11 @@ public class GameSetup : MonoBehaviour
             var boxHeight = Convert.ToInt32(id.Substring(Constants.BOX_PREFIX.Length));
             CreateBox(boxHeight, col, row, startHeight);
         }
+        else if (id.StartsWith(Constants.LAVA_PREFIX))
+        {
+            var lavaHeight = Convert.ToInt32(id.Substring(Constants.LAVA_PREFIX.Length));
+            CreateLava(lavaHeight, col, row, startHeight);
+        }
         else if (id.StartsWith(Constants.PLATFORM_PREFIX))
         {
             var periodIndex = id.IndexOf('.', Constants.PLATFORM_PREFIX.Length);
@@ -375,6 +381,21 @@ public class GameSetup : MonoBehaviour
         cube.name = CreateUniqueItemName("Cube_" + height);
 
         return cube;
+    }
+
+    private Transform CreateLava(float height, int col, int row, int startHeight)
+    {
+        var lava = Instantiate(_lavaPrefab, _nonInteractableObjectsContainer.transform);
+        lava.GetComponent<Collider>().material = noFrictionMaterial;
+
+        lava.localScale = new Vector3(1f, height, 1f);
+
+        var lavaCoordinates = new Vector3(col, startHeight, row);
+        var lavaDimensions = new Vector3(1f, height, 1f);
+        lava.position = TransformUtils.GetLocalPositionFromGridCoordinates(lavaCoordinates, lavaDimensions);
+        lava.name = CreateUniqueItemName("Lava_" + height);
+
+        return lava;
     }
 
     private Transform CreateGate(float height, int col, int row, int startHeight, int buttonNumber)
