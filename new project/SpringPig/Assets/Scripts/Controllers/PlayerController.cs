@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     // Needed to calculate energy
     private bool _wasGrounded = false;
     private bool _wasInAirBecauseOfMiniJump = false;
+    private bool _wasInAirBecauseOfJump = false;
     private int _maxHeight = -1;
     private float _startingHeight;
     
@@ -113,6 +114,10 @@ public class PlayerController : MonoBehaviour
                 var energyGain = Mathf.RoundToInt(_maxHeight - currentHeight - Constants.ENERGY_DOWNGRADE - 1);
                 IncrementEnergy(energyGain);
             }
+            else if (!_wasInAirBecauseOfJump && !_wasInAirBecauseOfMiniJump && _maxHeight == currentHeight)
+            {
+                // Don't lose energy in this case. This occurs if the player is not falling off the ledge of something and the grounds himself again by moving off the ledge.
+            }
             else if(!_wasInAirBecauseOfMiniJump)
             {
                 var energyGain = Mathf.RoundToInt(_maxHeight - currentHeight - Constants.ENERGY_DOWNGRADE);
@@ -127,6 +132,7 @@ public class PlayerController : MonoBehaviour
         {
             _startingHeight = currentHeight;
             _wasInAirBecauseOfMiniJump = false;
+            _wasInAirBecauseOfJump = false;
             _maxHeight = 0;
 
             if (jump != 0 && Energy != 0)
@@ -134,6 +140,7 @@ public class PlayerController : MonoBehaviour
                 // Apply velocity directly, since we want an immediate change.
                 // https://docs.unity3d.com/ScriptReference/Rigidbody-velocity.html
                 _player.velocity = new Vector3(_player.velocity.x, CalculateJumpVelocity(Energy, includeClearance: true), _player.velocity.z);
+                _wasInAirBecauseOfJump = true;
                 Energy = 0;
             }
             else if (miniJump != 0)
