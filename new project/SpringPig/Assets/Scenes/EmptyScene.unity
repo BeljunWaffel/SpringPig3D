@@ -156,11 +156,18 @@ MonoBehaviour:
   _boxPrefab: {fileID: 4775193322776776, guid: 10d6ec63015ab8548b57385ab033c1ab, type: 2}
   _lavaPrefab: {fileID: 4092633868509900, guid: ef0fdc150a172744d911b36667a857c6,
     type: 2}
+  _pickupPrefab: {fileID: 4406102910193872, guid: 9480b1719ec239c43bca88559f59f438,
+    type: 2}
   _platformPrefab: {fileID: 4370620539340018, guid: bac5a7f44ddf30c4ab3f627c3d854cee,
     type: 2}
   _plane: {fileID: 1900100056}
-  _player: {fileID: 1125974572861444, guid: 74b7eb2991ac7394fbe89f17cd24dfb4, type: 2}
+  _player: {fileID: 547186665}
   noFrictionMaterial: {fileID: 13400000, guid: 51156876978881041b92a2c1ce72f0b0, type: 2}
+--- !u!1 &547186665 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1125974572861444, guid: 74b7eb2991ac7394fbe89f17cd24dfb4,
+    type: 2}
+  m_PrefabInternal: {fileID: 1618260298}
 --- !u!1001 &1142198618
 Prefab:
   m_ObjectHideFlags: 0

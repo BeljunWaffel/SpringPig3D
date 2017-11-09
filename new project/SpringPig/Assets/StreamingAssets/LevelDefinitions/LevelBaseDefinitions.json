@@ -15,6 +15,10 @@
 	"Value": "Lava of height X"
 },
 {
+	"Key": "pickup.<X>.<Y>",
+	"Value": "Pickup of type X, value Y"
+},
+{
 	"Key": "gate.<X>.<Y>",
 	"Value": "Gate of Height X With Button Y"
 },

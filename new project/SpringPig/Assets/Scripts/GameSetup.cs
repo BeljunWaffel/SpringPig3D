@@ -10,6 +10,7 @@ public class GameSetup : MonoBehaviour
     [SerializeField] private Transform _buttonPrefab;
     [SerializeField] private Transform _boxPrefab;
     [SerializeField] private Transform _lavaPrefab;
+    [SerializeField] private Transform _pickupPrefab;
     [SerializeField] private Transform _platformPrefab;
     [SerializeField] private GameObject _plane;
     [SerializeField] private GameObject _player;
@@ -196,10 +197,10 @@ public class GameSetup : MonoBehaviour
         invisSouthWall.transform.position = southWall.transform.position;
 
         // Offset the invis walls
-        invisWestWall.transform.Translate(-Constants.PLAYER_WIDTH, Constants.MAX_ENERGY / 2, 0);
-        invisEastWall.transform.Translate(Constants.PLAYER_WIDTH, Constants.MAX_ENERGY / 2, 0);
-        invisNorthWall.transform.Translate(0, Constants.MAX_ENERGY / 2, Constants.PLAYER_WIDTH);
-        invisSouthWall.transform.Translate(0, Constants.MAX_ENERGY / 2, -Constants.PLAYER_WIDTH);
+        invisWestWall.transform.Translate(-Constants.PLAYER_WIDTH * .75f, Constants.MAX_ENERGY / 2, 0);
+        invisEastWall.transform.Translate(Constants.PLAYER_WIDTH * .75f, Constants.MAX_ENERGY / 2, 0);
+        invisNorthWall.transform.Translate(0, Constants.MAX_ENERGY / 2, Constants.PLAYER_WIDTH * .75f);
+        invisSouthWall.transform.Translate(0, Constants.MAX_ENERGY / 2, -Constants.PLAYER_WIDTH * .75f);
 
         // Rotate north and south after translation, otherwise it applies the translation wrong :/
         invisNorthWall.transform.rotation = northWall.transform.rotation;
@@ -295,6 +296,14 @@ public class GameSetup : MonoBehaviour
         {
             var lavaHeight = Convert.ToInt32(id.Substring(Constants.LAVA_PREFIX.Length));
             CreateLava(lavaHeight, col, row, startHeight);
+        }
+        else if (id.StartsWith(Constants.PICKUP_PREFIX))
+        {
+            var periodIndex = id.IndexOf('.', Constants.PICKUP_PREFIX.Length);
+            var pickupType = id.Substring(Constants.PICKUP_PREFIX.Length, periodIndex - Constants.PICKUP_PREFIX.Length);
+            var value = Convert.ToInt32(id.Substring(periodIndex + 1));
+
+            CreatePickup(pickupType, value, col, row, startHeight);
         }
         else if (id.StartsWith(Constants.PLATFORM_PREFIX))
         {
@@ -396,6 +405,22 @@ public class GameSetup : MonoBehaviour
         lava.name = CreateUniqueItemName("Lava_" + height);
 
         return lava;
+    }
+
+    private Transform CreatePickup(string pickupType, int value, int col, int row, int startHeight)
+    {
+        var pickup = Instantiate(_pickupPrefab, _interactableObjectsContainer.transform);
+        pickup.GetComponent<Collider>().material = noFrictionMaterial;
+        
+        var pickupCoordinates = new Vector3(col, startHeight, row);
+        pickup.position = TransformUtils.GetLocalPositionFromGridCoordinates(pickupCoordinates, pickup.transform.localScale);
+        pickup.name = CreateUniqueItemName("Pickup_" + pickupType + "_" + value);
+
+        var pickupController = pickup.GetComponent<PickupController>();
+        pickupController.Value = value;
+        pickupController.PickupEffect = pickupType;
+
+        return pickup;
     }
 
     private Transform CreateGate(float height, int col, int row, int startHeight, int buttonNumber)

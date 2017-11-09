@@ -20,7 +20,7 @@ public class Constants
     public static float BOX_SPEED = 1f;
 
     // Pickup Types
-    public static readonly string PICKUP_ADDITION = "Addition";          // Pickup Effect - Addition
+    public static readonly string PICKUP_ADDITION = "Add";          // Pickup Effect - Addition
 
     // Tags
     public static string TAG_PLAYER = "Player";                     // Tag used to define the player
@@ -38,5 +38,6 @@ public class Constants
     public static string BOX_PREFIX = "box.";
     public static string LAVA_PREFIX = "lava.";
     public static string PLATFORM_PREFIX = "plat.";
+    public static string PICKUP_PREFIX = "pickup.";
 
 }

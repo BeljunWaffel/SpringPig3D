@@ -2,18 +2,18 @@
 
 public class PickupController : MonoBehaviour {
 
-    [SerializeField] private string _pickupEffect;
-    [SerializeField] private int _value;
+    [SerializeField] public string PickupEffect;
+    [SerializeField] public int Value;
     
     private void OnTriggerEnter(Collider other)
     {
         if (TagList.ContainsTag(other.gameObject, Constants.TAG_PLAYER))
         {
             // Addition - Add the value to the player's current energy
-            if (_pickupEffect.Equals(Constants.PICKUP_ADDITION))
+            if (PickupEffect.Equals(Constants.PICKUP_ADDITION))
             {
                 PlayerController playerController = other.gameObject.GetComponent<PlayerController>();
-                playerController.Energy += _value;
+                playerController.Energy += Value;
                 Destroy(this.gameObject);
             }
 
