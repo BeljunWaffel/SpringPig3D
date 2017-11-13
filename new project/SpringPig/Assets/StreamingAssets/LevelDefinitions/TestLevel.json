@@ -7,6 +7,11 @@
 		"Y": 1,
 		"Z": 2
 	},
+	"Flag": {
+		"X": 2,
+		"Y": 0,
+		"Z": 0
+	},
 	"LevelBase": [
 		"2 float cube1",0,		0,		0,		"button.NT.3",
 		0,		"cube.2",	0,		"cube.2",	0,

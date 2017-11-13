@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-class GameState : MonoBehaviour
+public class GameState : MonoBehaviour
 {
     [SerializeField] private int _currentLevel = 1;
     [SerializeField] private bool _loadLevel = true;
@@ -37,6 +37,7 @@ class GameState : MonoBehaviour
 
     public void CompleteLevel()
     {
-
+        _currentLevel++;
+        LoadCurrentLevel();
     }
 }

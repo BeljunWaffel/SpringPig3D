@@ -9,6 +9,14 @@ public class Player
 }
 
 [System.Serializable]
+public class Flag
+{
+    public int X;
+    public int Y;
+    public int Z;
+}
+
+[System.Serializable]
 public class VerticalDefinition
 {
     public string Id;
@@ -29,6 +37,7 @@ public class LevelDefinition
     public int X_Scale;
     public int Z_Scale;
     public Player Player { get; set; }
+    public Flag Flag { get; set; }
     public List<string> LevelBase;
     public List<VerticalDefinitions> VerticalDefinitions;
 }

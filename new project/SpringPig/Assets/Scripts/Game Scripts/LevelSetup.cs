@@ -13,6 +13,7 @@ public class LevelSetup : MonoBehaviour
     [SerializeField] private Transform _platformPrefab;
     [SerializeField] private GameObject _plane;
     [SerializeField] private GameObject _player;
+    [SerializeField] private GameObject _flag;
     [SerializeField] private PhysicMaterial noFrictionMaterial;
 
     private int _planeZScale;
@@ -153,6 +154,9 @@ public class LevelSetup : MonoBehaviour
             // For some reason cylinders in unity start with a default height of 2, so player_height is scaled to half.
             var playerDimensions = new Vector3(Constants.PLAYER_WIDTH, 1f, Constants.PLAYER_LENGTH);
             _player.transform.position = TransformUtils.GetLocalPositionFromGridCoordinates(playerCoordinates, playerDimensions);
+            
+            var flagCoordinates = new Vector3(levelDefinition.Flag.X, levelDefinition.Flag.Y, levelDefinition.Flag.Z);
+            _flag.transform.position = TransformUtils.GetLocalPositionFromGridCoordinates(flagCoordinates, new Vector3(1f, 1f, 1f));
         }
     }
 

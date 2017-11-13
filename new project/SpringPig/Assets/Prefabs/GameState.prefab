@@ -78,4 +78,5 @@ MonoBehaviour:
     type: 2}
   _plane: {fileID: 1523776174287612, guid: a7e705c818da41447a106ed5d54895af, type: 2}
   _player: {fileID: 1125974572861444, guid: 74b7eb2991ac7394fbe89f17cd24dfb4, type: 2}
+  _flag: {fileID: 1369978977603928, guid: 158044e4cfa3fd54db3b613e27fedb02, type: 2}
   noFrictionMaterial: {fileID: 13400000, guid: 51156876978881041b92a2c1ce72f0b0, type: 2}
