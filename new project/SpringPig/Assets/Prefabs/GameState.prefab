@@ -1,0 +1,81 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1885148809415048}
+  m_IsPrefabParent: 1
+--- !u!1 &1885148809415048
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4692796977187766}
+  - component: {fileID: 114730631346836684}
+  - component: {fileID: 114146180176105188}
+  m_Layer: 0
+  m_Name: GameState
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4692796977187766
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1885148809415048}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114146180176105188
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1885148809415048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbd34920a4d119b48adfc182079bf1f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _currentLevel: 2
+  _loadLevel: 1
+--- !u!114 &114730631346836684
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1885148809415048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c05bb0be746e6c042b75b912fc4df260, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gatePrefab: {fileID: 4714507924153514, guid: 08d53291882792843889474d3ddbf68e,
+    type: 2}
+  _buttonPrefab: {fileID: 4235295429820920, guid: 65b16d05b2f492643819f97a4a01336a,
+    type: 2}
+  _boxPrefab: {fileID: 4775193322776776, guid: 10d6ec63015ab8548b57385ab033c1ab, type: 2}
+  _lavaPrefab: {fileID: 4092633868509900, guid: ef0fdc150a172744d911b36667a857c6,
+    type: 2}
+  _pickupPrefab: {fileID: 4406102910193872, guid: 9480b1719ec239c43bca88559f59f438,
+    type: 2}
+  _platformPrefab: {fileID: 4370620539340018, guid: bac5a7f44ddf30c4ab3f627c3d854cee,
+    type: 2}
+  _plane: {fileID: 1523776174287612, guid: a7e705c818da41447a106ed5d54895af, type: 2}
+  _player: {fileID: 1125974572861444, guid: 74b7eb2991ac7394fbe89f17cd24dfb4, type: 2}
+  noFrictionMaterial: {fileID: 13400000, guid: 51156876978881041b92a2c1ce72f0b0, type: 2}
