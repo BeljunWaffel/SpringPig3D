@@ -5,12 +5,12 @@ using UnityEngine;
 
 public class LevelSetup : MonoBehaviour
 {
-    [SerializeField] private Transform _gatePrefab;
-    [SerializeField] private Transform _buttonPrefab;
-    [SerializeField] private Transform _boxPrefab;
-    [SerializeField] private Transform _lavaPrefab;
-    [SerializeField] private Transform _pickupPrefab;
-    [SerializeField] private Transform _platformPrefab;
+    [SerializeField] public Transform GatePrefab;
+    [SerializeField] public Transform ButtonPrefab;
+    [SerializeField] public Transform BoxPrefab;
+    [SerializeField] public Transform LavaPrefab;
+    [SerializeField] public Transform PickupPrefab;
+    [SerializeField] public Transform PlatformPrefab;
     [SerializeField] private GameObject _plane;
     [SerializeField] private GameObject _player;
     [SerializeField] private GameObject _flag;
@@ -30,8 +30,10 @@ public class LevelSetup : MonoBehaviour
 
     // Containers
     private GameObject _wallsContainer;
-    private GameObject _interactableObjectsContainer;
-    private GameObject _nonInteractableObjectsContainer;
+    [NonSerialized] public GameObject InteractableObjectsContainer;
+    [NonSerialized] public GameObject NonInteractableObjectsContainer;
+
+    private AssetFactory _assetFactory;
 
     private Dictionary<int, GameObject> Buttons
     {
@@ -121,6 +123,11 @@ public class LevelSetup : MonoBehaviour
         {
             _platformMoveTimes = value;
         }
+    }
+
+    private void Awake()
+    {
+        _assetFactory = gameObject.GetComponent<AssetFactory>();
     }
 
     public void SetupLevel(string levelName)
@@ -219,8 +226,8 @@ public class LevelSetup : MonoBehaviour
         }
 
         // Set up containers
-        _interactableObjectsContainer = new GameObject("InteractableObjects");
-        _nonInteractableObjectsContainer = new GameObject("NonInteractableObjects");
+        InteractableObjectsContainer = new GameObject("InteractableObjects");
+        NonInteractableObjectsContainer = new GameObject("NonInteractableObjects");
 
         for (int i = 0; i < levelDefinition.LevelBase.Count; i++)
         {
@@ -354,7 +361,7 @@ public class LevelSetup : MonoBehaviour
 
     private GameObject CreateWall(float length, string name, GameObject parent, bool visible = true)
     {
-        var wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        var wall = _assetFactory.GetCube();
         wall.GetComponent<Collider>().material = noFrictionMaterial;
 
         // +1 to give a buffer on both sides, so the walls superpose at the edges
@@ -380,7 +387,7 @@ public class LevelSetup : MonoBehaviour
 
     private GameObject CreateCube(float height, int col, int row, int startHeight)
     {
-        var cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        var cube = _assetFactory.GetCube();
         cube.GetComponent<Collider>().material = noFrictionMaterial;
 
         cube.transform.localScale = new Vector3(1f, height, 1f);
@@ -389,7 +396,7 @@ public class LevelSetup : MonoBehaviour
         var cubeDimensions = new Vector3(1f, height, 1f);
         cube.transform.position = TransformUtils.GetLocalPositionFromGridCoordinates(cubeCoordinates, cubeDimensions);
 
-        cube.transform.parent = _nonInteractableObjectsContainer.transform;
+        cube.transform.parent = NonInteractableObjectsContainer.transform;
         cube.name = CreateUniqueItemName("Cube_" + height);
 
         return cube;
@@ -397,7 +404,7 @@ public class LevelSetup : MonoBehaviour
 
     private Transform CreateLava(float height, int col, int row, int startHeight)
     {
-        var lava = Instantiate(_lavaPrefab, _nonInteractableObjectsContainer.transform);
+        var lava = _assetFactory.GetLava();
         lava.GetComponent<Collider>().material = noFrictionMaterial;
 
         lava.localScale = new Vector3(1f, height, 1f);
@@ -412,7 +419,7 @@ public class LevelSetup : MonoBehaviour
 
     private Transform CreatePickup(string pickupType, int value, int col, int row, int startHeight)
     {
-        var pickup = Instantiate(_pickupPrefab, _interactableObjectsContainer.transform);
+        var pickup = _assetFactory.GetPickup();
         pickup.GetComponent<Collider>().material = noFrictionMaterial;
         
         var pickupCoordinates = new Vector3(col, startHeight, row);
@@ -428,7 +435,7 @@ public class LevelSetup : MonoBehaviour
 
     private Transform CreateGate(float height, int col, int row, int startHeight, int buttonNumber)
     {
-        var gate = Instantiate(_gatePrefab, _interactableObjectsContainer.transform);
+        var gate = _assetFactory.GetGate();
         gate.GetComponent<Collider>().material = noFrictionMaterial;
 
         gate.localScale = new Vector3(1f, height, 1f);
@@ -466,7 +473,7 @@ public class LevelSetup : MonoBehaviour
     private Transform CreateButton(int col, int row, int startHeight, int buttonNumber, bool isToggle)
     {
         // Button dimensions are the same as the prefab, so I don't change them here.
-        var button = Instantiate(_buttonPrefab, _interactableObjectsContainer.transform);
+        var button = _assetFactory.GetButton();
         button.GetComponent<Collider>().material = noFrictionMaterial;
 
         var buttonCoordinates = new Vector3(col, startHeight, row);
@@ -490,7 +497,7 @@ public class LevelSetup : MonoBehaviour
 
     private Transform CreateBox(float height, int col, int row, int startHeight)
     {
-        var box = Instantiate(_boxPrefab, _interactableObjectsContainer.transform);
+        var box = _assetFactory.GetBox();
         box.GetComponent<Collider>().material = noFrictionMaterial;
 
         box.localScale = new Vector3(1f, height, 1f);
@@ -509,7 +516,7 @@ public class LevelSetup : MonoBehaviour
         Transform platform;
         if (!Platforms.TryGetValue(platformNumber, out platform))
         {
-            platform = Instantiate(_platformPrefab, _nonInteractableObjectsContainer.transform);
+            platform = _assetFactory.GetPlatform();
             platform.GetComponent<Collider>().material = noFrictionMaterial;
             platform.name = CreateUniqueItemName("Platform");
 

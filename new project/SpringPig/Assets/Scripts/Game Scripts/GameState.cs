@@ -9,9 +9,13 @@ public class GameState : MonoBehaviour
     private Dictionary<int, string> levelIdNameMappings;
     private LevelSetup _levelSetup;
 
-    void Start()
+    private void Awake()
     {
         _levelSetup = gameObject.GetComponent<LevelSetup>();
+    }
+
+    void Start()
+    {
         if (!LevelParser.ParseLevelsList("LevelList.json", out levelIdNameMappings))
         {
             Debug.Log("Couldn't load LevelList");

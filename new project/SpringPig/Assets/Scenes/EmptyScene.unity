@@ -151,7 +151,7 @@ Prefab:
         type: 2}
       propertyPath: _gameState
       value: 
-      objectReference: {fileID: 1071089458}
+      objectReference: {fileID: 0}
     - target: {fileID: 1369978977603928, guid: 158044e4cfa3fd54db3b613e27fedb02, type: 2}
       propertyPath: m_Name
       value: UmbrellaFlagWithCastle
@@ -164,7 +164,7 @@ GameObject:
   m_PrefabParentObject: {fileID: 1369978977603928, guid: 158044e4cfa3fd54db3b613e27fedb02,
     type: 2}
   m_PrefabInternal: {fileID: 158818810}
---- !u!1001 &517477171
+--- !u!1001 &318613065
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -213,11 +213,6 @@ Prefab:
       propertyPath: _player
       value: 
       objectReference: {fileID: 547186665}
-    - target: {fileID: 114146180176105188, guid: 484122da2966c3548acd187888ae3e79,
-        type: 2}
-      propertyPath: _currentLevel
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 114730631346836684, guid: 484122da2966c3548acd187888ae3e79,
         type: 2}
       propertyPath: _flag
@@ -231,12 +226,6 @@ GameObject:
   m_PrefabParentObject: {fileID: 1125974572861444, guid: 74b7eb2991ac7394fbe89f17cd24dfb4,
     type: 2}
   m_PrefabInternal: {fileID: 1618260298}
---- !u!114 &1071089458 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 114146180176105188, guid: 484122da2966c3548acd187888ae3e79,
-    type: 2}
-  m_PrefabInternal: {fileID: 517477171}
-  m_Script: {fileID: 11500000, guid: fbd34920a4d119b48adfc182079bf1f2, type: 3}
 --- !u!1001 &1142198618
 Prefab:
   m_ObjectHideFlags: 0
