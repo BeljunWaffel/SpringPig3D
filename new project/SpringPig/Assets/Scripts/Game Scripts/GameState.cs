@@ -41,6 +41,7 @@ public class GameState : MonoBehaviour
 
     public void CompleteLevel()
     {
+        _levelSetup.ResetAndPoolLevel();
         _currentLevel++;
         LoadCurrentLevel();
     }

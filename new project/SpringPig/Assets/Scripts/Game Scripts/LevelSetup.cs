@@ -33,7 +33,7 @@ public class LevelSetup : MonoBehaviour
     [NonSerialized] public GameObject InteractableObjectsContainer;
     [NonSerialized] public GameObject NonInteractableObjectsContainer;
 
-    private AssetFactory _assetFactory;
+    private AssetPool _assetPool;
 
     private Dictionary<int, GameObject> Buttons
     {
@@ -127,7 +127,12 @@ public class LevelSetup : MonoBehaviour
 
     private void Awake()
     {
-        _assetFactory = gameObject.GetComponent<AssetFactory>();
+        _assetPool = gameObject.GetComponent<AssetPool>();
+
+        // Set up containers
+        _wallsContainer = new GameObject("Walls");
+        InteractableObjectsContainer = new GameObject("InteractableObjects");
+        NonInteractableObjectsContainer = new GameObject("NonInteractableObjects");
     }
 
     public void SetupLevel(string levelName)
@@ -167,6 +172,34 @@ public class LevelSetup : MonoBehaviour
         }
     }
 
+    public void ResetAndPoolLevel()
+    {
+        _planeZScale = 0;
+        _planeXScale = 0;
+
+        _itemCounts.Clear();
+        _verticalDefinitionsList.Clear();
+
+        PoolObjectChildren(_wallsContainer);
+        PoolObjectChildren(InteractableObjectsContainer);
+        PoolObjectChildren(NonInteractableObjectsContainer);
+
+        _buttons?.Clear();
+        _gates?.Clear();
+        _platforms?.Clear();
+        _platformPositions?.Clear();
+        _platformMoveTimes?.Clear();
+    }
+
+    private void PoolObjectChildren(GameObject gameObject)
+    {
+        while (gameObject.transform.childCount > 0)
+        {
+            var child = gameObject.transform.GetChild(0);
+            _assetPool.PoolTransform(child);
+        }
+    }
+
     private void ScalePlane()
     {
         // Default plane dim is 10x10.
@@ -178,7 +211,6 @@ public class LevelSetup : MonoBehaviour
 
     private void CreateOuterWalls()
     {
-        _wallsContainer = new GameObject("Walls");
         var westWall = CreateWall(_planeZScale, "West Wall", _wallsContainer);
         var eastWall = CreateWall(_planeZScale, "East Wall", _wallsContainer);
         var northWall = CreateWall(_planeXScale, "North Wall", _wallsContainer);
@@ -224,10 +256,6 @@ public class LevelSetup : MonoBehaviour
         {
             throw new ArgumentNullException("Invalid JSON. LevelBase size does not match length/width arguments.");
         }
-
-        // Set up containers
-        InteractableObjectsContainer = new GameObject("InteractableObjects");
-        NonInteractableObjectsContainer = new GameObject("NonInteractableObjects");
 
         for (int i = 0; i < levelDefinition.LevelBase.Count; i++)
         {
@@ -361,7 +389,7 @@ public class LevelSetup : MonoBehaviour
 
     private GameObject CreateWall(float length, string name, GameObject parent, bool visible = true)
     {
-        var wall = _assetFactory.GetCube();
+        var wall = _assetPool.SpawnTransform(Constants.TAG_WALL).gameObject;
         wall.GetComponent<Collider>().material = noFrictionMaterial;
 
         // +1 to give a buffer on both sides, so the walls superpose at the edges
@@ -382,12 +410,15 @@ public class LevelSetup : MonoBehaviour
             wall.transform.localScale += new Vector3(0, Constants.MAX_ENERGY, 0);
         }
 
+        var tagList = wall.AddComponent<TagList>();
+        tagList.Tags.Add(Constants.TAG_WALL);
+
         return wall;
     }
 
     private GameObject CreateCube(float height, int col, int row, int startHeight)
     {
-        var cube = _assetFactory.GetCube();
+        var cube = _assetPool.SpawnTransform(Constants.TAG_OBSTACLE).gameObject;
         cube.GetComponent<Collider>().material = noFrictionMaterial;
 
         cube.transform.localScale = new Vector3(1f, height, 1f);
@@ -397,14 +428,17 @@ public class LevelSetup : MonoBehaviour
         cube.transform.position = TransformUtils.GetLocalPositionFromGridCoordinates(cubeCoordinates, cubeDimensions);
 
         cube.transform.parent = NonInteractableObjectsContainer.transform;
-        cube.name = CreateUniqueItemName("Cube_" + height);
+        cube.name = CreateUniqueItemName(Constants.TAG_OBSTACLE + "_" + height);
+
+        var tagList = cube.AddComponent<TagList>();
+        tagList.Tags.Add(Constants.TAG_OBSTACLE);
 
         return cube;
     }
 
     private Transform CreateLava(float height, int col, int row, int startHeight)
     {
-        var lava = _assetFactory.GetLava();
+        var lava = _assetPool.SpawnTransform(Constants.TAG_LAVA);
         lava.GetComponent<Collider>().material = noFrictionMaterial;
 
         lava.localScale = new Vector3(1f, height, 1f);
@@ -412,19 +446,19 @@ public class LevelSetup : MonoBehaviour
         var lavaCoordinates = new Vector3(col, startHeight, row);
         var lavaDimensions = new Vector3(1f, height, 1f);
         lava.position = TransformUtils.GetLocalPositionFromGridCoordinates(lavaCoordinates, lavaDimensions);
-        lava.name = CreateUniqueItemName("Lava_" + height);
+        lava.name = CreateUniqueItemName(Constants.TAG_LAVA + "_" + height);
 
         return lava;
     }
 
     private Transform CreatePickup(string pickupType, int value, int col, int row, int startHeight)
     {
-        var pickup = _assetFactory.GetPickup();
+        var pickup = _assetPool.SpawnTransform(Constants.TAG_PICKUP);
         pickup.GetComponent<Collider>().material = noFrictionMaterial;
         
         var pickupCoordinates = new Vector3(col, startHeight, row);
         pickup.position = TransformUtils.GetLocalPositionFromGridCoordinates(pickupCoordinates, pickup.transform.localScale);
-        pickup.name = CreateUniqueItemName("Pickup_" + pickupType + "_" + value);
+        pickup.name = CreateUniqueItemName(Constants.TAG_PICKUP + "_" + pickupType + "_" + value);
 
         var pickupController = pickup.GetComponent<PickupController>();
         pickupController.Value = value;
@@ -435,7 +469,7 @@ public class LevelSetup : MonoBehaviour
 
     private Transform CreateGate(float height, int col, int row, int startHeight, int buttonNumber)
     {
-        var gate = _assetFactory.GetGate();
+        var gate = _assetPool.SpawnTransform(Constants.TAG_GATE);
         gate.GetComponent<Collider>().material = noFrictionMaterial;
 
         gate.localScale = new Vector3(1f, height, 1f);
@@ -443,7 +477,7 @@ public class LevelSetup : MonoBehaviour
         var gateCoordinates = new Vector3(col, startHeight, row);
         var gateDimensions = new Vector3(1f, height, 1f);
         gate.position = TransformUtils.GetLocalPositionFromGridCoordinates(gateCoordinates, gateDimensions);
-        gate.name = CreateUniqueItemName("Gate_H" + height + "_" + buttonNumber);        
+        gate.name = CreateUniqueItemName(Constants.TAG_GATE + "_H" + height + "_" + buttonNumber);        
 
         // If button has not been created yet, create an empty GameObject that will be replaced later.
         GameObject button;
@@ -473,13 +507,13 @@ public class LevelSetup : MonoBehaviour
     private Transform CreateButton(int col, int row, int startHeight, int buttonNumber, bool isToggle)
     {
         // Button dimensions are the same as the prefab, so I don't change them here.
-        var button = _assetFactory.GetButton();
+        var button = _assetPool.SpawnTransform(Constants.TAG_BUTTON);
         button.GetComponent<Collider>().material = noFrictionMaterial;
 
         var buttonCoordinates = new Vector3(col, startHeight, row);
         var buttonDimensions = new Vector3(.5f, .25f, .5f);
         button.position = TransformUtils.GetLocalPositionFromGridCoordinates(buttonCoordinates, buttonDimensions);
-        button.name = CreateUniqueItemName("Button_" + (isToggle ? "T_" : "NT_") + buttonNumber);
+        button.name = CreateUniqueItemName(Constants.TAG_BUTTON + "_" + (isToggle ? "T_" : "NT_") + buttonNumber);
         button.GetComponent<ButtonController>().Toggleable = isToggle;
         
         // If gates already exist for this button, make sure to assign this button to them.
@@ -497,7 +531,7 @@ public class LevelSetup : MonoBehaviour
 
     private Transform CreateBox(float height, int col, int row, int startHeight)
     {
-        var box = _assetFactory.GetBox();
+        var box = _assetPool.SpawnTransform(Constants.TAG_BOX);
         box.GetComponent<Collider>().material = noFrictionMaterial;
 
         box.localScale = new Vector3(1f, height, 1f);
@@ -505,7 +539,7 @@ public class LevelSetup : MonoBehaviour
         var boxCoordinates = new Vector3(col, startHeight, row);
         var boxDimensions = new Vector3(1f, height, 1f);
         box.position = TransformUtils.GetLocalPositionFromGridCoordinates(boxCoordinates, boxDimensions);
-        box.name = CreateUniqueItemName("Box_" + height);
+        box.name = CreateUniqueItemName(Constants.TAG_BOX + "_" + height);
 
         return box;
     }
@@ -516,9 +550,9 @@ public class LevelSetup : MonoBehaviour
         Transform platform;
         if (!Platforms.TryGetValue(platformNumber, out platform))
         {
-            platform = _assetFactory.GetPlatform();
+            platform = _assetPool.SpawnTransform(Constants.TAG_PLATFORM);
             platform.GetComponent<Collider>().material = noFrictionMaterial;
-            platform.name = CreateUniqueItemName("Platform");
+            platform.name = CreateUniqueItemName(Constants.TAG_PLATFORM);
 
             var controller = platform.GetComponent<PlatformController>();
             controller.Positions = new List<Vector3>();

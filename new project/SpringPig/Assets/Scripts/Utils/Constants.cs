@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public class Constants
+﻿public class Constants
 {
     // Energy
     public static int MAX_ENERGY = 10;              // How much energy the player is allowed to store.
@@ -27,6 +25,14 @@ public class Constants
     public static string TAG_BOX = "Box";                           // Tag used to define a box
     public static string TAG_BUTTON_PUSHER = "Button_Pusher";       // Tag to define things that can push buttons
     public static string TAG_BURNABLE = "Burnable";                 // Tag to define things that can be effected by Lava
+    public static string TAG_FLAG = "Flag";
+    public static string TAG_BUTTON = "Button";
+    public static string TAG_GATE = "Gate";
+    public static string TAG_PLATFORM = "Platform";
+    public static string TAG_LAVA = "Lava";
+    public static string TAG_PICKUP = "Pickup";
+    public static string TAG_WALL = "Wall";
+    public static string TAG_OBSTACLE = "Obstacle";
 
     // Level Creation Constants
     public static float DEFAULT_WALL_WIDTH = .5f;
