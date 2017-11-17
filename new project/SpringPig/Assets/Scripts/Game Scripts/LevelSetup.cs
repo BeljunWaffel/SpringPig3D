@@ -410,9 +410,6 @@ public class LevelSetup : MonoBehaviour
             wall.transform.localScale += new Vector3(0, Constants.MAX_ENERGY, 0);
         }
 
-        var tagList = wall.AddComponent<TagList>();
-        tagList.Tags.Add(Constants.TAG_WALL);
-
         return wall;
     }
 
@@ -429,9 +426,6 @@ public class LevelSetup : MonoBehaviour
 
         cube.transform.parent = NonInteractableObjectsContainer.transform;
         cube.name = CreateUniqueItemName(Constants.TAG_OBSTACLE + "_" + height);
-
-        var tagList = cube.AddComponent<TagList>();
-        tagList.Tags.Add(Constants.TAG_OBSTACLE);
 
         return cube;
     }

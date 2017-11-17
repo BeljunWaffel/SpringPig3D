@@ -5,4 +5,12 @@
 {
 	"Name": "TestLevelWithPlatform.json",
 	"LevelNumber": 2
+}, 
+{
+	"Name": "Default10x10.json",
+	"LevelNumber": 3
+}, 
+{
+	"Name": "Genesis.json",
+	"LevelNumber": 4
 }]
