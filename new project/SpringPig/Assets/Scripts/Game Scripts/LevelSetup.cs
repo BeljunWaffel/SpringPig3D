@@ -19,14 +19,14 @@ public class LevelSetup : MonoBehaviour
     private int _planeZScale;
     private int _planeXScale;
 
-    private Dictionary<string, int> _itemCounts;
+    private Dictionary<string, int> _itemCounts;                // The number of items of a given type in the level. Used for naming.
     private List<VerticalDefinitions> _verticalDefinitionsList;
 
-    private Dictionary<int, GameObject> _buttons; // Maps the button number to actual button.
-    private Dictionary<int, List<Transform>> _gates; // Maps the gate button to the gates opened by that button.
-    private Dictionary<int, Transform> _platforms; // Dictionary of platforms on this level. Index = platform #.
-    private Dictionary<int, List<Vector3>> _platformPositions; // Mapping of platforms to their positions.
-    private Dictionary<int, List<int>> _platformMoveTimes; // Mapping of platforms to their move times.
+    private Dictionary<int, GameObject> _buttons;               // Maps the button number to actual button.
+    private Dictionary<int, List<Transform>> _gates;            // Maps the gate button to the gates opened by that button.
+    private Dictionary<int, Transform> _platforms;              // Dictionary of platforms on this level. Index = platform #.
+    private Dictionary<int, List<Vector3>> _platformPositions;  // Mapping of platforms to their positions.
+    private Dictionary<int, List<int>> _platformMoveTimes;      // Mapping of platforms to their move times.
 
     // Containers
     private GameObject _wallsContainer;
