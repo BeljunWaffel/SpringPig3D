@@ -552,8 +552,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _movementMultiplier: 5
-  _gravityMagnitude: 18
-  Energy: 2
+  _gravityMagnitude: 30
+  Energy: 0
   CameraRig: {fileID: 4289669738421090, guid: 0ee75919de1700b4aaa1027e8f53434c, type: 2}
 --- !u!135 &135246770023817284
 SphereCollider:

@@ -185,7 +185,7 @@ MonoBehaviour:
   doubleClickDelta: 0.35
   timeToWaitAfterReset: 1
   _cameraMoveSpeed: 5
-  _tiltMin: 45
+  _tiltMin: 75
   _tiltMax: 35
   _zoomSpeed: 0.5
   _zoomMinY: 1

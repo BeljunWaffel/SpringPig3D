@@ -1,0 +1,29 @@
+{
+	"Name": "Learn To Fly",
+	"X_Scale": 10,
+	"Z_Scale": 11,
+	"Player": {
+		"X": 0,
+		"Y": 4,
+		"Z": 5
+	},
+	"Flag": {
+		"X": 9,
+		"Y": 2,
+		"Z": 5
+	},
+	"LevelBase": [
+		"cube.4",	"cube.4",	"cube.4",	0,	0,	0,	0,	0,	"cube.2",	"cube.2",
+		"cube.4",	"cube.4",	"cube.4",	0,	0,	0,	0,	0,	"cube.2",	"cube.2",
+		"cube.4",	"cube.4",	"cube.4",	0,	0,	0,	0,	0,	"cube.2",	"cube.2",
+		"cube.4",	"cube.4",	"cube.4",	0,	0,	0,	0,	0,	"cube.2",	"cube.2",
+		"cube.4",	"cube.4",	"cube.4",	0,	0,	0,	0,	0,	"cube.2",	"cube.2",
+		"cube.4",	"cube.4",	"cube.4",	0,	0,	0,	0,	0,	"cube.2",	"cube.2",
+		"cube.4",	"cube.4",	"cube.4",	0,	0,	0,	0,	0,	"cube.2",	"cube.2",
+		"cube.4",	"cube.4",	"cube.4",	0,	0,	0,	0,	0,	"cube.2",	"cube.2",
+		"cube.4",	"cube.4",	"cube.4",	0,	0,	0,	0,	0,	"cube.2",	"cube.2",
+		"cube.4",	"cube.4",	"cube.4",	0,	0,	0,	0,	0,	"cube.2",	"cube.2",
+		"cube.4",	"cube.4",	"cube.4",	0,	0,	0,	0,	0,	"cube.2",	"cube.2"
+	],
+	"VerticalDefinitions": []
+}

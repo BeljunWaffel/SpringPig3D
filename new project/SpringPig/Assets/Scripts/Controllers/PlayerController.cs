@@ -6,7 +6,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private int _gravityMagnitude;
     [SerializeField] public int Energy;
     [SerializeField] public Transform CameraRig;
-
+    
     private Rigidbody _player;
     private float _distToGround;
     private bool _isMovingHorizontally = false;
@@ -137,8 +137,6 @@ public class PlayerController : MonoBehaviour
 
             if (jump != 0 && Energy != 0)
             {
-                // Apply velocity directly, since we want an immediate change.
-                // https://docs.unity3d.com/ScriptReference/Rigidbody-velocity.html
                 _player.velocity = new Vector3(_player.velocity.x, CalculateJumpVelocity(Energy, includeClearance: true), _player.velocity.z);
                 _wasInAirBecauseOfJump = true;
                 Energy = 0;

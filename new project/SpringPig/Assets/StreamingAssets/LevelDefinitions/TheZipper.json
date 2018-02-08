@@ -1,0 +1,114 @@
+{
+	"Name": "The Zipper",
+	"X_Scale": 13,
+	"Z_Scale": 15,
+	"Player": {
+		"X": 2,
+		"Y": 2,
+		"Z": 3
+	},
+	"Flag": {
+		"X": 6,
+		"Y": 9,
+		"Z": 10
+	},
+	"LevelBase": [
+		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
+		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
+		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
+		0,		0,		"FC1",		"FC2",		"FC3",		"FC4",		0,		0,		0,		0,		0,		0,		0,
+		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
+		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
+		0,		0,		0,		0,		0,		0,		0,		0,		"FC6",		"FC5",		"FC4",		"FC3",		0,
+		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
+		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
+		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
+		0,		0,		0,		"FC5",		"FC6",		"FC7",		"FC8",		0,		0,		0,		0,		0,		0,
+		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
+		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
+		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,
+		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0,		0
+	],
+	"VerticalDefinitions": [
+		{
+			"Id": "FC1",
+			"VerticalDefinition": [
+				{
+					"Id": "cube.1",
+					"StartHeight": 1
+				}
+			]
+		},
+		{
+			"Id": "FC2",
+			"VerticalDefinition": [
+				{
+					"Id": "cube.1",
+					"StartHeight": 2
+				}
+			]
+		},
+		{
+			"Id": "FC3",
+			"VerticalDefinition": [
+				{
+					"Id": "cube.1",
+					"StartHeight": 3
+				}
+			]
+		},
+		{
+			"Id": "FC4",
+			"VerticalDefinition": [
+				{
+					"Id": "cube.1",
+					"StartHeight": 4
+				}
+			]
+		},
+		{
+			"Id": "FC5",
+			"VerticalDefinition": [
+				{
+					"Id": "cube.1",
+					"StartHeight": 5
+				}
+			]
+		},
+		{
+			"Id": "FC6",
+			"VerticalDefinition": [
+				{
+					"Id": "cube.1",
+					"StartHeight": 6
+				}
+			]
+		},
+		{
+			"Id": "FC7",
+			"VerticalDefinition": [
+				{
+					"Id": "cube.1",
+					"StartHeight": 7
+				}
+			]
+		},
+		{
+			"Id": "FC8",
+			"VerticalDefinition": [
+				{
+					"Id": "cube.1",
+					"StartHeight": 8
+				}
+			]
+		},
+		{
+			"Id": "FC9",
+			"VerticalDefinition": [
+				{
+					"Id": "cube.1",
+					"StartHeight": 9
+				}
+			]
+		}]
+}

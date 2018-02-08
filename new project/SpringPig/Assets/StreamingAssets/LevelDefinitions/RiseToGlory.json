@@ -1,0 +1,82 @@
+{
+	"Name": "Rise To Glory",
+	"X_Scale": 17,
+	"Z_Scale": 11,
+	"Player": {
+		"X": 3,
+		"Y": 7,
+		"Z": 5
+	},
+	"Flag": {
+		"X": 15,
+		"Y": 5,
+		"Z": 5
+	},
+	"LevelBase": [
+		0,	0,	0,		0,		0,		0,	0,	"float cube 5",	"float cube 8",	"bot2-top2",	"bot2-top4",	"cube.2",	"cube.2",	"cube.5",	"cube.5",	"cube.5",	"cube.9",
+		0,	0,	0,		0,		0,		0,	0,	"float cube 5",	"float cube 8",	"bot2-top2",	"bot2-top4",	"cube.2",	"cube.2",	"cube.5",	"cube.5",	"cube.5",	"cube.9",
+		0,	0,	0,		0,		0,		0,	0,	"float cube 5",	"float cube 8",	"bot2-top2",	"bot2-top4",	"cube.2",	"cube.2",	"cube.5",	"cube.5",	"cube.5",	"cube.9",
+		0,	0,	0,		0,		0,		0,	0,	"float cube 5",	"float cube 8",	"bot2-top2",	"bot2-top4",	"cube.2",	"cube.2",	"cube.5",	"cube.5",	"cube.5",	"cube.9",
+		0,	0,	0,		"cube.7",	0,		0,	0,	"float cube 5",	"float cube 8",	"bot2-top2",	"bot2-top4",	"cube.2",	"cube.2",	"cube.5",	"cube.5",	"cube.5",	"cube.9",
+		0,	0,	"cube.7",	"cube.7",	"cube.7",	0,	0,	"float cube 5",	"float cube 8",	"bot2-top2",	"bot2-top4",	"cube.2",	"cube.2",	"cube.5",	"cube.5",	"cube.5",	"cube.9",
+		0,	0,	0,		"cube.7",	0,		0,	0,	"float cube 5",	"float cube 8",	"bot2-top2",	"bot2-top4",	"cube.2",	"cube.2",	"cube.5",	"cube.5",	"cube.5",	"cube.9",
+		0,	0,	0,		0,		0,		0,	0,	"float cube 5",	"float cube 8",	"bot2-top2",	"bot2-top4",	"cube.2",	"cube.2",	"cube.5",	"cube.5",	"cube.5",	"cube.9",
+		0,	0,	0,		0,		0,		0,	0,	"float cube 5",	"float cube 8",	"bot2-top2",	"bot2-top4",	"cube.2",	"cube.2",	"cube.5",	"cube.5",	"cube.5",	"cube.9",
+		0,	0,	0,		0,		0,		0,	0,	"float cube 5",	"float cube 8",	"bot2-top2",	"bot2-top4",	"cube.2",	"cube.2",	"cube.5",	"cube.5",	"cube.5",	"cube.9",
+		0,	0,	0,		0,		0,		0,	0,	"float cube 5",	"float cube 8",	"bot2-top2",	"bot2-top4",	"cube.2",	"cube.2",	"cube.5",	"cube.5",	"cube.5",	"cube.9"
+	],
+	"VerticalDefinitions": [
+		{
+			"Id": "toCeiling6",
+			"VerticalDefinition": [
+				{
+					"Id": "cube.5",
+					"StartHeight": 4
+				}
+			]
+		},
+		{
+			"Id": "float cube 5",
+			"VerticalDefinition": [
+				{
+					"Id": "cube.4",
+					"StartHeight": 5
+				}
+			]
+		},
+		{
+			"Id": "float cube 8",
+			"VerticalDefinition": [
+				{
+					"Id": "cube.1",
+					"StartHeight": 8
+				}
+			]
+		},
+		{
+			"Id": "bot2-top2",
+			"VerticalDefinition": [
+				{
+					"Id": "cube.2",
+					"StartHeight": 0
+				},
+				{
+					"Id": "cube.1",
+					"StartHeight": 8
+				}
+			]
+		},
+		{
+			"Id": "bot2-top4",
+			"VerticalDefinition": [
+				{
+					"Id": "cube.2",
+					"StartHeight": 0
+				},
+				{
+					"Id": "cube.5",
+					"StartHeight": 4
+				}
+			]
+		}]
+}

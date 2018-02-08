@@ -1,0 +1,47 @@
+{
+	"Name": "The Descent",
+	"X_Scale": 18,
+	"Z_Scale": 11,
+	"Player": {
+		"X": 0,
+		"Y": 6,
+		"Z": 5
+	},
+	"Flag": {
+		"X": 15,
+		"Y": 4,
+		"Z": 5
+	},
+	"LevelBase": [
+		"toCeiling6",	0,		0,		0,		0,		0,		0,	0,	0,	0,	0,	0,	0,	0,		0,		0,		0,	0,
+		"cube.3",	"toCeiling6",	0,		0,		0,		0,		0,	0,	0,	0,	0,	0,	0,	0,		0,		0,		0,	0,
+		"cube.3",	"cube.3",	"toCeiling6",	0,		0,		0,		0,	0,	0,	0,	0,	0,	0,	0,		0,		0,		0,	0,
+		"cube.6",	"cube.3",	"cube.3",	"toCeiling6",	0,		0,		0,	0,	0,	0,	0,	0,	0,	"float cube 4",	"float cube 4",	0,		0,	0,
+		"cube.6",	"cube.6",	"cube.3",	"cube.3",	"toCeiling6",	0,		0,	0,	0,	0,	0,	0,	0,	"float cube 4",	"float cube 4",	0,		0,	0,
+		"cube.6",	"cube.6",	"cube.6",	"cube.3",	"cube.3",	"toCeiling6",	0,	0,	0,	0,	0,	0,	0,	"float cube 4",	"float cube 4",	"float cube 4",	0,	0,
+		"cube.6",	"cube.6",	"cube.3",	"cube.3",	"toCeiling6",	0,		0,	0,	0,	0,	0,	0,	0,	"float cube 4",	"float cube 4",	0,		0,	0,
+		"cube.6",	"cube.3",	"cube.3",	"toCeiling6",	0,		0,		0,	0,	0,	0,	0,	0,	0,	"float cube 4",	"float cube 4",	0,		0,	0,
+		"cube.3",	"cube.3",	"toCeiling6",	0,		0,		0,		0,	0,	0,	0,	0,	0,	0,	0,		0,		0,		0,	0,
+		"cube.3",	"toCeiling6",	0,		0,		0,		0,		0,	0,	0,	0,	0,	0,	0,	0,		0,		0,		0,	0,
+		"toCeiling6",	0,		0,		0,		0,		0,		0,	0,	0,	0,	0,	0,	0,	0,		0,		0,		0,	0
+	],
+	"VerticalDefinitions": [
+		{
+			"Id": "toCeiling6",
+			"VerticalDefinition": [
+				{
+					"Id": "cube.5",
+					"StartHeight": 4
+				}
+			]
+		},
+		{
+			"Id": "float cube 4",
+			"VerticalDefinition": [
+				{
+					"Id": "cube.1",
+					"StartHeight": 3
+				}
+			]
+		}]
+}
