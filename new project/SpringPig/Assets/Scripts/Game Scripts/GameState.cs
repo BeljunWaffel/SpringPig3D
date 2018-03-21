@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameState : MonoBehaviour
 {
-    [SerializeField] private int _currentLevel = 1;
+    [SerializeField] private int _levelToStartAt = 0;
     [SerializeField] private bool _loadLevel = true;
+    [SerializeField] private bool _overrideInterSceneState = false;
 
     private Dictionary<int, string> levelIdNameMappings;
     private LevelSetup _levelSetup;
@@ -23,26 +25,39 @@ public class GameState : MonoBehaviour
 
         if (_loadLevel)
         {
+            if (InterSceneState.UseGameStateLevelNumber || _overrideInterSceneState)
+            {
+                InterSceneState.CurrentLevelNumber = _levelToStartAt;
+            }
             LoadCurrentLevel();
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        var escape = Input.GetAxis("Escape");
+        if (escape > 0)
+        {
+            SceneManager.LoadScene("MainMenu");
         }
     }
 
     public void LoadCurrentLevel()
     {
-        if (levelIdNameMappings.ContainsKey(_currentLevel))
+        if (levelIdNameMappings.ContainsKey(InterSceneState.CurrentLevelNumber))
         {
-            _levelSetup.SetupLevel(levelIdNameMappings[_currentLevel]);
+            _levelSetup.SetupLevel(levelIdNameMappings[InterSceneState.CurrentLevelNumber]);
         }
         else
         {
-            Debug.Log("Level #" + _currentLevel + " does not exist in Level List");
+            Debug.Log("Level #" + InterSceneState.CurrentLevelNumber + " does not exist in Level List");
         }
     }
 
     public void CompleteLevel()
     {
         _levelSetup.ResetAndPoolLevel();
-        _currentLevel++;
+        InterSceneState.CurrentLevelNumber++;
         LoadCurrentLevel();
     }
 }

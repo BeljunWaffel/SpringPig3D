@@ -17,9 +17,6 @@ public class PlayerController : MonoBehaviour
     private bool _wasInAirBecauseOfJump = false;
     private int _maxHeight = -1;
     private float _startingHeight;
-    
-    // Box interactions
-    private bool _isPushingBoxInX = false;
     private bool _isPushingBoxInZ = false;
     
     void Start()
@@ -51,31 +48,8 @@ public class PlayerController : MonoBehaviour
         return _isMovingHorizontally;
     }
 
-    public bool IsPushingBoxInX
-    {
-        get
-        {
-            return _isPushingBoxInX;
-        }
-
-        set
-        {
-            _isPushingBoxInX = value;
-        }
-    }
-
-    public bool IsPushingBoxInZ
-    {
-        get
-        {
-            return _isPushingBoxInZ;
-        }
-
-        set
-        {
-            _isPushingBoxInZ = value;
-        }
-    }
+    public bool IsPushingBoxInX { get; set; } = false;
+    public bool IsPushingBoxInZ { get; set; } = false;
     
     /**
      * 
@@ -175,12 +149,12 @@ public class PlayerController : MonoBehaviour
             // Rotate player to face the direction of movement
             transform.forward = Vector3.Lerp(transform.forward, new Vector3(movement.x, 0f, movement.z), 10 * Time.deltaTime);
 
-            if (_isPushingBoxInX && movement.x != 0)
+            if (IsPushingBoxInX && movement.x != 0)
             {
                 movement.x = GetPlayerPushingBoxSpeed(movement.x);
             }
 
-            if (_isPushingBoxInZ && movement.z != 0)
+            if (IsPushingBoxInZ && movement.z != 0)
             {
                 movement.z = GetPlayerPushingBoxSpeed(movement.z);
             }
@@ -233,8 +207,8 @@ public class PlayerController : MonoBehaviour
     {
         if (TagList.ContainsTag(collision.gameObject, Constants.TAG_BOX))
         {
-            _isPushingBoxInX = false;
-            _isPushingBoxInZ = false;
+            IsPushingBoxInX = false;
+            IsPushingBoxInZ = false;
         }
     }
 

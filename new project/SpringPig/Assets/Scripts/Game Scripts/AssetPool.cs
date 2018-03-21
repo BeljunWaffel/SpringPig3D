@@ -182,6 +182,7 @@ public class AssetPool : MonoBehaviour
         var controller = platform.GetComponent<PlatformController>();
         controller.Positions.Clear();
         controller.SecondsToReachTarget.Clear();
+        controller.IsSet = false;
         _platforms.Add(platform);
     }
 

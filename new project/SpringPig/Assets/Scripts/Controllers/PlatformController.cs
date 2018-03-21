@@ -18,7 +18,14 @@ class PlatformController : MonoBehaviour
     private Rigidbody _platform;
     private float _time;
 
+    public bool IsSet { get; set; } = false;
+
     void Start()
+    {
+        SetupPlatform();
+    }
+
+    public void SetupPlatform()
     {
         if (Positions.Count != SecondsToReachTarget.Count)
         {
@@ -40,10 +47,16 @@ class PlatformController : MonoBehaviour
         _endPosition = Positions.Count > 1 ? Positions[1] : _startPosition;
 
         _time = 0;
+        IsSet = true;
     }
 
     private void Update()
     {
+        if (!IsSet)
+        {
+            SetupPlatform();
+        }
+
         if (Positions.Count > 1)
         {
             _time += Time.deltaTime / SecondsToReachTarget[_startPositionIndex];

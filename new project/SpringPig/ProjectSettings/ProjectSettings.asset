@@ -586,7 +586,7 @@ PlayerSettings:
   cloudServicesEnabled:
     UNet: 1
   facebookSdkVersion: 7.9.4
-  apiCompatibilityLevel: 2
+  apiCompatibilityLevel: 3
   cloudProjectId: 34aa265f-864f-4b53-b5ac-86849ac686c5
   projectName: SpringPig
   organizationId: dingusaurusrex

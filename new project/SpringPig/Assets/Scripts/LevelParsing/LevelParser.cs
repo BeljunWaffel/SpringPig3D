@@ -41,9 +41,14 @@ public static class LevelParser
             {
                 var mappingsList = JsonConvert.DeserializeObject<List<LevelNameNumberMapping>>(jsonLevelList);
                 levelList = new Dictionary<int, string>();
-                foreach (var mapping in mappingsList)
+                int levelNumber = 0;
+                foreach (var level in mappingsList)
                 {
-                    levelList[mapping.LevelNumber] = mapping.Name;
+                    if (level.Include == 1)
+                    {
+                        levelList[levelNumber] = level.Name;
+                        levelNumber++;
+                    }
                 }
             }
             catch (Exception e)

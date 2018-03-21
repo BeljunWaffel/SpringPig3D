@@ -166,7 +166,8 @@ public class LevelSetup : MonoBehaviour
             // For some reason cylinders in unity start with a default height of 2, so player_height is scaled to half.
             var playerDimensions = new Vector3(Constants.PLAYER_WIDTH, 1f, Constants.PLAYER_LENGTH);
             _player.transform.position = TransformUtils.GetLocalPositionFromGridCoordinates(playerCoordinates, playerDimensions);
-            
+            _player.GetComponent<PlayerController>().Energy = 0;
+
             var flagCoordinates = new Vector3(levelDefinition.Flag.X, levelDefinition.Flag.Y, levelDefinition.Flag.Z);
             _flag.transform.position = TransformUtils.GetLocalPositionFromGridCoordinates(flagCoordinates, new Vector3(1f, 1f, 1f));
         }
