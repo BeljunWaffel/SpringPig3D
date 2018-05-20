@@ -1,12 +1,16 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
+using System;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float _movementMultiplier;
-    [SerializeField] private int _gravityMagnitude;
+    [SerializeField] private int _fallingGravityMultiplier;
+    [SerializeField] private int _jumpingGravityMultiplier;
     [SerializeField] public int Energy;
     [SerializeField] public Transform CameraRig;
-    
+    [SerializeField] public Transform Projectile;
+
     private Rigidbody _player;
     private float _distToGround;
     private bool _isMovingHorizontally = false;
@@ -18,11 +22,13 @@ public class PlayerController : MonoBehaviour
     private int _maxHeight = -1;
     private float _startingHeight;
     private bool _isPushingBoxInZ = false;
+
+    private DateTime _lastFireTime;
     
     void Start()
-    {
+    { 
         _player = GetComponent<Rigidbody>();
-        Physics.gravity = new Vector3(0f, -1f * _gravityMagnitude, 0f);
+        //Physics.gravity = new Vector3(0f, -1f * _gravityMagnitude, 0f);
 
         // Get collider to calculate distance to ground for IsGrounded() function.
         var collider = GetComponent<Collider>();
@@ -36,6 +42,7 @@ public class PlayerController : MonoBehaviour
     {
         PerformHorizontalMovement();
         PerformVerticalMovement();
+        FireProjectile();
     }
 
     /**
@@ -66,6 +73,44 @@ public class PlayerController : MonoBehaviour
      * MOVEMENT
      * 
      */
+    public void FireProjectile()
+    {
+        var fire = Input.GetAxis("Fire");
+        if (fire != 0 && DateTime.Now - _lastFireTime > TimeSpan.FromMilliseconds(100))
+        {
+            _lastFireTime = DateTime.Now;
+            var projectile = Instantiate(Projectile);
+
+            // Determine where the projective starts relative to the player
+            projectile.transform.SetPositionAndRotation(transform.position + transform.forward * .75f, Quaternion.identity);
+
+            var projectileController = projectile.GetComponent<ProjectileController>();
+
+            // If you find an enemy, lob a projectile at it. Else shoot straight forward
+            var enemy = GameObject.Find("Enemy");
+            if (enemy)
+            {
+                var directionToEnemy = enemy.transform.position - projectile.transform.position;
+                var distanceToEnemy = Mathf.Sqrt(Mathf.Pow((enemy.transform.position.x - projectile.transform.position.x), 2) + Mathf.Pow((enemy.transform.position.z - projectile.transform.position.z), 2));
+                
+                Debug.Log(Physics.gravity.y);
+                //Debug.Log(distanceToEnemy);
+                //directionToEnemy.y = 10;
+                //Debug.Log(directionToEnemy);
+                projectile.GetComponent<Rigidbody>().mass = 5;
+                projectile.GetComponent<Rigidbody>().useGravity = true;
+                projectile.GetComponent<Rigidbody>().velocity = new Vector3(directionToEnemy.x / 2, -1 * Physics.gravity.y, directionToEnemy.z / 2);
+            }
+            else
+            {
+                projectile.GetComponent<Rigidbody>().velocity = transform.forward * projectileController.ProjectileSpeed;
+            }
+
+            // Ensure projectile does not collide with player
+            Physics.IgnoreCollision(projectile.GetComponent<Collider>(), _player.GetComponent<Collider>());
+        }
+    }
+
     private void PerformVerticalMovement()
     {
         var jump = Input.GetAxis("Jump");
@@ -74,9 +119,22 @@ public class PlayerController : MonoBehaviour
 
         // If in the air, calculate max height to determine amount of energy to gain.
         int currentHeight = Mathf.RoundToInt(_player.position.y - _player.transform.localScale.y);
-        if (!IsGrounded() && currentHeight > _maxHeight)
+        if (!isGrounded)
         {
-            _maxHeight = currentHeight;
+            if (currentHeight > _maxHeight)
+            {
+                _maxHeight = currentHeight;
+            }
+
+            // If falling, make gravity stronger and fall 2x faster
+            if (_player.velocity.y < 0)
+            {
+                _player.velocity += Vector3.up * Physics.gravity.y * (_fallingGravityMultiplier - 1) * Time.deltaTime;
+            }
+            else if (_player.velocity.y > 0) // If player is jumping, make gravity a bit stronger too
+            {
+                _player.velocity += Vector3.up * Physics.gravity.y * (_jumpingGravityMultiplier - 1) * Time.deltaTime;
+            }
         }
 
         // If player was in the air before but isn't anymore, calculate how much energy was gained.
@@ -175,7 +233,7 @@ public class PlayerController : MonoBehaviour
         
         var gravity = -1 * Physics.gravity.magnitude;
         var height = includeClearance ? jumpHeight + Constants.JUMP_CLEARANCE : jumpHeight;
-        float yVelocity = Mathf.Sqrt(-2 * gravity * height);
+        float yVelocity = Mathf.Sqrt(-2 * gravity * _jumpingGravityMultiplier * height);
         return yVelocity;
     }
     

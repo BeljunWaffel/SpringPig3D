@@ -33,6 +33,7 @@
     public static string TAG_PICKUP = "Pickup";
     public static string TAG_WALL = "Wall";
     public static string TAG_OBSTACLE = "Obstacle";
+    public static string TAG_ENEMY = "Enemy";
 
     // Level Creation Constants
     public static float DEFAULT_WALL_WIDTH = .5f;

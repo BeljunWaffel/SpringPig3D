@@ -114,6 +114,48 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &150826621
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4094482941318836, guid: 3a0ca40c6881b1a4e8d9c2cf6b9adbd7, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4094482941318836, guid: 3a0ca40c6881b1a4e8d9c2cf6b9adbd7, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4094482941318836, guid: 3a0ca40c6881b1a4e8d9c2cf6b9adbd7, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4094482941318836, guid: 3a0ca40c6881b1a4e8d9c2cf6b9adbd7, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4094482941318836, guid: 3a0ca40c6881b1a4e8d9c2cf6b9adbd7, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4094482941318836, guid: 3a0ca40c6881b1a4e8d9c2cf6b9adbd7, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4094482941318836, guid: 3a0ca40c6881b1a4e8d9c2cf6b9adbd7, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4094482941318836, guid: 3a0ca40c6881b1a4e8d9c2cf6b9adbd7, type: 2}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 3a0ca40c6881b1a4e8d9c2cf6b9adbd7, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1001 &158818810
 Prefab:
   m_ObjectHideFlags: 0
@@ -482,6 +524,22 @@ Prefab:
         type: 2}
       propertyPath: Energy
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114960379836191070, guid: 74b7eb2991ac7394fbe89f17cd24dfb4,
+        type: 2}
+      propertyPath: Projectile
+      value: 
+      objectReference: {fileID: 4104349666955932, guid: d7394a1bb8e5e014e8ab806013402d97,
+        type: 2}
+    - target: {fileID: 114960379836191070, guid: 74b7eb2991ac7394fbe89f17cd24dfb4,
+        type: 2}
+      propertyPath: _fallingGravityMultiplier
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114960379836191070, guid: 74b7eb2991ac7394fbe89f17cd24dfb4,
+        type: 2}
+      propertyPath: _jumpingGravityMultiplier
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 74b7eb2991ac7394fbe89f17cd24dfb4, type: 2}

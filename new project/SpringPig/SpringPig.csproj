@@ -313,6 +313,7 @@
     <Compile Include="Assets\Scripts\Controllers\PickupController.cs" />
     <Compile Include="Assets\Scripts\Controllers\PlatformController.cs" />
     <Compile Include="Assets\Scripts\Controllers\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\Controllers\ProjectileController.cs" />
     <Compile Include="Assets\Scripts\Game Scripts\AssetPool.cs" />
     <Compile Include="Assets\Scripts\Game Scripts\GameState.cs" />
     <Compile Include="Assets\Scripts\Game Scripts\InterSceneState.cs" />
