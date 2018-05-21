@@ -13,6 +13,7 @@ public class AssetPool : MonoBehaviour
     private List<Transform> _lava = new List<Transform>();
     private List<Transform> _pickups = new List<Transform>();
     private List<Transform> _platforms = new List<Transform>();
+    private List<Transform> _enemies = new List<Transform>();
     private List<GameObject> _cubes = new List<GameObject>();
 
     private void Awake()
@@ -46,6 +47,10 @@ public class AssetPool : MonoBehaviour
         else if (tag == Constants.TAG_PLATFORM)
         {
             return SpawnTransformHelper(_platforms, _levelSetup.PlatformPrefab, _levelSetup.NonInteractableObjectsContainer);
+        }
+        else if (tag == Constants.TAG_ENEMY)
+        {
+            return SpawnTransformHelper(_enemies, _levelSetup.EnemyPrefab, _levelSetup.InteractableObjectsContainer);
         }
         else if (tag == Constants.TAG_WALL)
         {

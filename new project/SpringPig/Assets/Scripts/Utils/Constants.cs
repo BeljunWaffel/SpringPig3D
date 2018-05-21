@@ -10,6 +10,11 @@
     public static float PLAYER_WIDTH = 1f;
     public static float PLAYER_LENGTH = 1f;
 
+    // Player Dimensions
+    public static float ENEMY_HEIGHT = .5f;
+    public static float ENEMY_WIDTH = 1f;
+    public static float ENEMY_LENGTH = 1f;
+
     // Jump
     public static float JUMP_CLEARANCE = .1f;
     public static int MINI_JUMP_HEIGHT = 1;
@@ -46,5 +51,6 @@
     public static string LAVA_PREFIX = "lava.";
     public static string PLATFORM_PREFIX = "plat.";
     public static string PICKUP_PREFIX = "pickup.";
+    public static string ENEMY_PREFIX = "enemy.";
 
 }

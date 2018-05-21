@@ -114,48 +114,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &150826621
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4094482941318836, guid: 3a0ca40c6881b1a4e8d9c2cf6b9adbd7, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4094482941318836, guid: 3a0ca40c6881b1a4e8d9c2cf6b9adbd7, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4094482941318836, guid: 3a0ca40c6881b1a4e8d9c2cf6b9adbd7, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4094482941318836, guid: 3a0ca40c6881b1a4e8d9c2cf6b9adbd7, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4094482941318836, guid: 3a0ca40c6881b1a4e8d9c2cf6b9adbd7, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4094482941318836, guid: 3a0ca40c6881b1a4e8d9c2cf6b9adbd7, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4094482941318836, guid: 3a0ca40c6881b1a4e8d9c2cf6b9adbd7, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4094482941318836, guid: 3a0ca40c6881b1a4e8d9c2cf6b9adbd7, type: 2}
-      propertyPath: m_RootOrder
-      value: 6
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 3a0ca40c6881b1a4e8d9c2cf6b9adbd7, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1001 &158818810
 Prefab:
   m_ObjectHideFlags: 0
@@ -274,13 +232,19 @@ Prefab:
     - target: {fileID: 114146180176105188, guid: 484122da2966c3548acd187888ae3e79,
         type: 2}
       propertyPath: _levelToStartAt
-      value: 0
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 114146180176105188, guid: 484122da2966c3548acd187888ae3e79,
         type: 2}
       propertyPath: _overrideInterSceneState
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114730631346836684, guid: 484122da2966c3548acd187888ae3e79,
+        type: 2}
+      propertyPath: EnemyPrefab
+      value: 
+      objectReference: {fileID: 4094482941318836, guid: 3a0ca40c6881b1a4e8d9c2cf6b9adbd7,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 484122da2966c3548acd187888ae3e79, type: 2}
   m_IsPrefabParent: 0

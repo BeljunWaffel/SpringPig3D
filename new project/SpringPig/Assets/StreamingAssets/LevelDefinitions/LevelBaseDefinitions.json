@@ -30,3 +30,7 @@
 	"Key": "plat.<X>.<Y>.<Z>.<A>",
 	"Value": "Platform #X, position #Y, Height Z. Time to reach next position <A>. Position index starts at 0."
 },
+{
+	"Key": "enemy.<X>.<Y>.<Z>",
+	"Value": "enemy #X, position #Y, Time to reach next position <Z>. Position index starts at 0."
+},

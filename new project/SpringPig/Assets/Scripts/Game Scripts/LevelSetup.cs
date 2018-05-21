@@ -11,6 +11,7 @@ public class LevelSetup : MonoBehaviour
     [SerializeField] public Transform LavaPrefab;
     [SerializeField] public Transform PickupPrefab;
     [SerializeField] public Transform PlatformPrefab;
+    [SerializeField] public Transform EnemyPrefab;
     [SerializeField] private GameObject _plane;
     [SerializeField] private GameObject _player;
     [SerializeField] private GameObject _flag;
@@ -27,6 +28,8 @@ public class LevelSetup : MonoBehaviour
     private Dictionary<int, Transform> _platforms;              // Dictionary of platforms on this level. Index = platform #.
     private Dictionary<int, List<Vector3>> _platformPositions;  // Mapping of platforms to their positions.
     private Dictionary<int, List<int>> _platformMoveTimes;      // Mapping of platforms to their move times.
+    private Dictionary<int, Transform> _enemies;                // Dictionary of enemies on this level. Index = enemy #.
+    private Dictionary<int, List<Vector3>> _enemyPositions;     // Mapping of enemies to their positions.
 
     // Containers
     private GameObject _wallsContainer;
@@ -70,7 +73,7 @@ public class LevelSetup : MonoBehaviour
             Gates = value;
         }
     }
-
+    
     private Dictionary<int, Transform> Platforms
     {
         get
@@ -122,6 +125,42 @@ public class LevelSetup : MonoBehaviour
         set
         {
             _platformMoveTimes = value;
+        }
+    }
+
+    private Dictionary<int, Transform> Enemies
+    {
+        get
+        {
+            if (_enemies == null)
+            {
+                _enemies = new Dictionary<int, Transform>();
+            }
+
+            return _enemies;
+        }
+
+        set
+        {
+            _enemies = value;
+        }
+    }
+
+    private Dictionary<int, List<Vector3>> EnemyPositions
+    {
+        get
+        {
+            if (_enemyPositions == null)
+            {
+                _enemyPositions = new Dictionary<int, List<Vector3>>();
+            }
+
+            return _enemyPositions;
+        }
+
+        set
+        {
+            _enemyPositions = value;
         }
     }
 
@@ -190,6 +229,8 @@ public class LevelSetup : MonoBehaviour
         _platforms?.Clear();
         _platformPositions?.Clear();
         _platformMoveTimes?.Clear();
+        _enemies?.Clear();
+        _enemyPositions?.Clear();
     }
 
     private void PoolObjectChildren(GameObject gameObject)
@@ -296,6 +337,21 @@ public class LevelSetup : MonoBehaviour
                 controller.SecondsToReachTarget.Add(moveTime);
             }
         }
+
+        // Update enemy positions
+        foreach (var key in Enemies.Keys)
+        {
+            var enemy = Enemies[key];
+            var controller = enemy.GetComponent<EnemyController>();
+
+            if (EnemyPositions[key].Count > 0)
+            {
+                controller.StartPosition = EnemyPositions[key][0];
+                controller.EndPosition = EnemyPositions[key][1];
+            } else {
+                Debug.Log("No Start/End pos for enemy #" + key);
+            }
+        }
     }
 
     private void ParseStringsAndCreateGameObjects(VerticalDefinition itemVerticalDefinition, int col, int row, bool lookAtVerticalDefinitions)
@@ -356,6 +412,17 @@ public class LevelSetup : MonoBehaviour
             var platTimer = Convert.ToInt32(id.Substring(periodIndex3 + 1));
 
             CreatePlatform(platNumber, platPos, platTimer, col, row, platHeight);
+        }
+        else if (id.StartsWith(Constants.ENEMY_PREFIX))
+        {
+            var periodIndex = id.IndexOf('.', Constants.ENEMY_PREFIX.Length);
+            var periodIndex2 = id.IndexOf('.', periodIndex + 1);
+
+            var enemyNumber = Convert.ToInt32(id.Substring(Constants.ENEMY_PREFIX.Length, periodIndex - Constants.ENEMY_PREFIX.Length));
+            var enemyPos = Convert.ToInt32(id.Substring(periodIndex + 1, periodIndex2 - (periodIndex + 1)));
+            var moveTime = Convert.ToInt32(id.Substring(periodIndex2 + 1));
+
+            CreateEnemy(enemyNumber, enemyPos, moveTime, col, row, startHeight);
         }
         else if (lookAtVerticalDefinitions)
         {
@@ -595,6 +662,51 @@ public class LevelSetup : MonoBehaviour
         }
 
         return platform;
+    }
+
+    private Transform CreateEnemy(int enemyNumber, int positionNumber, int moveTime, int col, int row, int startHeight)
+    {
+        // Create the platform if it doesn't exist yet.
+        Transform enemy;
+        if (!Enemies.TryGetValue(enemyNumber, out enemy))
+        {
+            enemy = _assetPool.SpawnTransform(Constants.TAG_ENEMY);
+            enemy.GetComponent<Collider>().material = noFrictionMaterial;
+            enemy.name = CreateUniqueItemName(Constants.TAG_ENEMY);
+
+            var controller = enemy.GetComponent<EnemyController>();
+            controller.TimeToReachNextPos = moveTime;
+            Enemies[enemyNumber] = enemy;
+        }
+
+        // Determine where this point falls on the grid.
+        var pointCoordinates = new Vector3(col, startHeight, row);
+
+        // For some reason cylinders in unity start with a default height of 2, so player_height is scaled to half.
+        var enemyDimensions = new Vector3(Constants.ENEMY_WIDTH, 1f, Constants.ENEMY_LENGTH);
+        var enemyPosition = TransformUtils.GetLocalPositionFromGridCoordinates(pointCoordinates, enemyDimensions);
+
+        // Add the position to EnemyPositions
+        List<Vector3> positions;
+        if (!EnemyPositions.TryGetValue(enemyNumber, out positions)) {
+            positions = new List<Vector3>();
+        }
+
+        while (positionNumber >= positions.Count)
+        {
+            positions.Add(Vector3.zero);
+        }
+        positions[positionNumber] = enemyPosition;
+        EnemyPositions[enemyNumber] = positions;
+        
+        // Set the platform start location
+        if (positionNumber == 0)
+        {
+            enemy.position = enemyPosition;
+            Enemies[enemyNumber] = enemy;
+        }
+
+        return enemy;
     }
 
     private string CreateUniqueItemName(string key)

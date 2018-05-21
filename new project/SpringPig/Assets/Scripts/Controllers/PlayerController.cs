@@ -21,14 +21,12 @@ public class PlayerController : MonoBehaviour
     private bool _wasInAirBecauseOfJump = false;
     private int _maxHeight = -1;
     private float _startingHeight;
-    private bool _isPushingBoxInZ = false;
 
     private DateTime _lastFireTime;
     
     void Start()
     { 
         _player = GetComponent<Rigidbody>();
-        //Physics.gravity = new Vector3(0f, -1f * _gravityMagnitude, 0f);
 
         // Get collider to calculate distance to ground for IsGrounded() function.
         var collider = GetComponent<Collider>();
@@ -87,27 +85,26 @@ public class PlayerController : MonoBehaviour
             var projectileController = projectile.GetComponent<ProjectileController>();
 
             // If you find an enemy, lob a projectile at it. Else shoot straight forward
-            var enemy = GameObject.Find("Enemy");
+            var enemy = FindObjectOfType<EnemyController>();
             if (enemy)
             {
-                var directionToEnemy = enemy.transform.position - projectile.transform.position;
+                var secondsToEnemy = 2;
+                var enemyExpectedPosition = enemy.GetExpectedPositionInMilliSeconds(secondsToEnemy * 1000);
+                var directionToEnemy = enemyExpectedPosition - projectile.transform.position;
                 var distanceToEnemy = Mathf.Sqrt(Mathf.Pow((enemy.transform.position.x - projectile.transform.position.x), 2) + Mathf.Pow((enemy.transform.position.z - projectile.transform.position.z), 2));
                 
-                Debug.Log(Physics.gravity.y);
-                //Debug.Log(distanceToEnemy);
-                //directionToEnemy.y = 10;
-                //Debug.Log(directionToEnemy);
                 projectile.GetComponent<Rigidbody>().mass = 5;
                 projectile.GetComponent<Rigidbody>().useGravity = true;
-                projectile.GetComponent<Rigidbody>().velocity = new Vector3(directionToEnemy.x / 2, -1 * Physics.gravity.y, directionToEnemy.z / 2);
+                projectile.GetComponent<Rigidbody>().velocity = new Vector3(directionToEnemy.x / secondsToEnemy, -1 * Physics.gravity.y, directionToEnemy.z / secondsToEnemy);
             }
             else
             {
                 projectile.GetComponent<Rigidbody>().velocity = transform.forward * projectileController.ProjectileSpeed;
-            }
+            }   
 
             // Ensure projectile does not collide with player
             Physics.IgnoreCollision(projectile.GetComponent<Collider>(), _player.GetComponent<Collider>());
+            Physics.IgnoreCollision(projectile.GetComponent<Collider>(), enemy.GetComponent<Collider>());
         }
     }
 
