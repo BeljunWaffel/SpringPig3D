@@ -102,7 +102,7 @@ public class PlayerController : MonoBehaviour
                 projectile.GetComponent<Rigidbody>().velocity = transform.forward * projectileController.ProjectileSpeed;
             }   
 
-            // Ensure projectile does not collide with player
+            // Ensure projectile does not collide with player or the enemy
             Physics.IgnoreCollision(projectile.GetComponent<Collider>(), _player.GetComponent<Collider>());
             Physics.IgnoreCollision(projectile.GetComponent<Collider>(), enemy.GetComponent<Collider>());
         }
